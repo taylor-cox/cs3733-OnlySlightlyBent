@@ -1,0 +1,58 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: OnlySlightlyBentAPI
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: This API interfaces with OnlySlighlyBent's VideoMashupCreator
+  contact:
+    email: you@your-company.com
+host: virtserver.swaggerhub.com
+basePath: /OnlySli1/VideoMashupPlayer/1.0.0
+schemes:
+ - https
+ 
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: participants
+  description: People creating video mashups.
+
+paths:
+  /appendVideo:
+    post:
+      tags:
+      - participants
+      summary: requests a video to be appended to a playlist
+      description: Requests a video to be appended to a playlist
+      operationId: appendVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: AppendVideoRequest
+        description: Appends video to playlist
+        required: true
+        schema:
+         $ref: '#/definitions/AppendVideoRequest'
+      responses:
+        200:
+          description: video appended to playlist
+        401:
+          description: video not available
+        402: 
+          description: playlist not available
+definitions:
+  AppendVideoRequest:
+    type: object
+    required:
+    - videoID
+    - playlistID
+    properties:
+      videoID:
+        type: string
+      playlistID:
+        type: string
