@@ -24,11 +24,7 @@ public class LambdaFunctionHandler implements RequestHandler<AppendVideoRequest,
 
     @Override
     public String handleRequest(AppendVideoRequest input, Context context) {
-        
-    	context.getLogger().log("Input 1\n");
-    	context.getLogger().log("Arg1: " + input.getArg1() + "\n");
-    	context.getLogger().log("Arg2: " + input.getArg2() + "\n");
-    	context.getLogger().log("Input: " + input + "\n");
+    	context.getLogger().log("Hello from Lambda");
         return "Hello from Lambda";
     }
 }

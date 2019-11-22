@@ -1,29 +1,29 @@
 package mashup.http;
 
 public class AppendVideoRequest {
-	String arg1;
-	String arg2;
+	String videoID;
+	String playlistID;
 	
-	public AppendVideoRequest(String arg1, String arg2) {
-		this.arg1 = arg1;
-		this.arg2 = arg2;
+	public AppendVideoRequest(String videoID, String playlistID) {
+		this.videoID = videoID;
+		this.playlistID = playlistID;
 	}
 	
 	public AppendVideoRequest() {}
 	
-	public String getArg1() {
-		return arg1;
+	public String getVideoID() {
+		return videoID;
 	}
 
-	public void setArg1(String arg1) {
-		this.arg1 = arg1;
+	public void setVideoID(String videoID) {
+		this.videoID = videoID;
 	}
 
-	public String getArg2() {
-		return arg2;
+	public String getPlaylistID() {
+		return playlistID;
 	}
 
-	public void setArg2(String arg2) {
-		this.arg2 = arg2;
+	public void setPlaylistID(String playlistID) {
+		this.playlistID = playlistID;
 	}
 }
