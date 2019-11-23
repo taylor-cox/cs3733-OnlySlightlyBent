@@ -11,7 +11,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class ListAllVideosHandlerTest {
+public class UploadVideoHandlerTest {
 
     private static Object input;
 
@@ -31,8 +31,8 @@ public class ListAllVideosHandlerTest {
     }
 
     @Test
-    public void testListAllVideosHandler() {
-        ListAllVideosHandler handler = new ListAllVideosHandler();
+    public void testUploadVideoHandler() {
+        UploadVideoHandler handler = new UploadVideoHandler();
         Context ctx = createContext();
 
         String output = handler.handleRequest(input, ctx);
