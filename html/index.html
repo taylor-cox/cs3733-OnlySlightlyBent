@@ -1,159 +1,171 @@
-<html><head><script type="text/javascript">
-var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
-var playlistNum = 1;
-var videoNum = 1;
-var selectedPlaylist = -1;
-var selectedVideo = -1;
+<html>
 
-function processResponse(arg1, arg2, result) {
-  // Can grab any DIV or SPAN HTML element and can then manipulate its
-  // contents dynamically via javascript
-  console.log("result:" + result);
-  var js = JSON.parse(result);
+<head>
+    <script type="text/javascript">
+        var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
+        var playlistNum = 1;
+        var videoNum = 1;
+        var selectedPlaylist = -1;
+        var selectedVideo = -1;
 
-  var computation = js["result"];
+        function processResponse(arg1, arg2, result) {
+            // Can grab any DIV or SPAN HTML element and can then manipulate its
+            // contents dynamically via javascript
+            console.log("result:" + result);
+            var js = JSON.parse(result);
 
-  // Update computation result
-  document.addForm.result.value = computation
-}
+            var computation = js["result"];
 
-function makeList(isPlaylist, num) {
-  var listHTML = '';
-  var isEven = 1;
-  for (var i = 0; i < num; i++) {
-    if ((isPlaylist?selectedPlaylist:selectedVideo) == i) listHTML += '<div class="rowSelected"';
-    else if (isEven) listHTML += '<div class="rowEven"';
-      else listHTML += '<div class="rowOdd"';
-    isEven = !isEven;
-    listHTML += 'onClick="JavaScript:select' + (isPlaylist?'Playlist':'Video') + '(' + i + ')"';
-    listHTML += '>\n <span class="columnName" style="width:50%">(';
-    listHTML += isPlaylist?"Playlist":"Video";
-    listHTML += ' ' + (i + 1);
-    listHTML += ' name)</span>\n';
-    listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-    listHTML += ' <button style="width:20%" onClick="JavaScript:handleDelete'
-    listHTML += isPlaylist?"Playlist":"Video";
-    listHTML += '(';
-    listHTML += i;
-    listHTML += ')">\n';
-    listHTML += '   <img src="trash_can.png">\n';
-    listHTML += '   <noscript><span>X</span></noscript>\n';
-    listHTML += ' </button>\n';
-    listHTML += '</div>\n';
-  }
-  document.getElementById(isPlaylist?"playlists":"videos").innerHTML = listHTML;
-}
+            // Update computation result
+            document.addForm.result.value = computation
+        }
 
-function selectPlaylist(p) {
-  selectedPlaylist = p;
-  makeList(1, playlistNum);
-}
+        function makeList(isPlaylist, num) {
+            var listHTML = '';
+            var isEven = 1;
+            for (var i = 0; i < num; i++) {
+                if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
+                else if (isEven) listHTML += '<div class="rowEven"';
+                else listHTML += '<div class="rowOdd"';
+                isEven = !isEven;
+                listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
+                listHTML += '>\n <span class="columnName" style="width:50%">(';
+                listHTML += isPlaylist ? "Playlist" : "Video";
+                listHTML += ' ' + (i + 1);
+                listHTML += ' name)</span>\n';
+                listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
+                listHTML += ' <button style="width:20%" onClick="JavaScript:handleDelete'
+                listHTML += isPlaylist ? "Playlist" : "Video";
+                listHTML += '(';
+                listHTML += i;
+                listHTML += ')">\n';
+                listHTML += '   <img src="trash_can.png">\n';
+                listHTML += '   <noscript><span>X</span></noscript>\n';
+                listHTML += ' </button>\n';
+                listHTML += '</div>\n';
+            }
+            document.getElementById(isPlaylist ? "playlists" : "videos").innerHTML = listHTML;
+        }
 
-function selectVideo(v) {
-  selectedVideo = v;
-  makeList(0, videoNum);
-}
+        function selectPlaylist(p) {
+            selectedPlaylist = p;
+            makeList(1, playlistNum);
+        }
 
-function handleDeleteVideo(p) {
-  videoNum--;
-  makeList(0, videoNum);
-}
+        function selectVideo(v) {
+            selectedVideo = v;
+            makeList(0, videoNum);
+        }
 
-function handleNewVideo() {
-  videoNum++;
-  makeList(0, videoNum);
-}
+        function handleDeleteVideo(p) {
+            videoNum--;
+            makeList(0, videoNum);
+        }
 
-function handleDeletePlaylist(p) {
-  playlistNum--;
-  makeList(1, playlistNum);
-}
+        function handleNewVideo() {
+            videoNum++;
+            makeList(0, videoNum);
+        }
 
-function handleNewPlaylist() {
-  playlistNum++;
-  makeList(1, playlistNum);
-}
+        function handleDeletePlaylist(p) {
+            playlistNum--;
+            makeList(1, playlistNum);
+        }
 
-function handleClick(e) {
-  var form = document.addForm;
-  var searchField = form.searchField.value;
+        function handleNewPlaylist() {
+            playlistNum++;
+            makeList(1, playlistNum);
+        }
 
-  window.alert(searchField);
-  processResponse();
+        function handleMyLibraryClick() {
+            window.alert("My library has been clicked.")
+        }
 
-/*  var data = {};
-  data["arg1"] = arg1;
-  data["arg2"] = arg2;
+        function handleSearchClick(e) {
+            var form = document.addForm;
+            var searchField = form.searchField.value;
 
-  var js = JSON.stringify(data);
-  console.log("JS:" + js);
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", add_url, true);
+            window.alert(searchField);
+            processResponse();
 
-  // send the collected data as JSON
-  xhr.send(js);
+            /*  var data = {};
+              data["arg1"] = arg1;
+              data["arg2"] = arg2;
 
-  // This will process results and update HTML as appropriate. 
-  xhr.onloadend = function () {
-    console.log(xhr);
-    console.log(xhr.request);
-    if (xhr.readyState == XMLHttpRequest.DONE) {
-    	if (xhr.status == 200) {
-	      console.log ("XHR:" + xhr.responseText);
-	      processResponse(arg1, arg2, xhr.responseText);
-    	} else if (xhr.status == 400) {
-    		alert ("unable to process request");
-    	}
-    } else {
-      processResponse(arg1, arg2, "N/A");
-    }
-  };*/
-}
-</script></head><body>
-<form name="addForm" method="post">
-<h1>Video Mashup </h1>
-<link rel="stylesheet"
-href="index.css">
-<div class="row">
-  <div class="column" style="background-color:#aaa">
-    <h2>Playlists</h2>
-    <div class="rowEven">
-      <input type="button" value="My Library" style="width:100%" onClick="JavaScript:handleClick(this)">
-    </div>
-    <br>
-    <div class="rowOdd">
-      <input type="button" value="New Playlist" style="width:100%" onClick="JavaScript:handleNewPlaylist()">
-    </div>
-    <br>
+              var js = JSON.stringify(data);
+              console.log("JS:" + js);
+              var xhr = new XMLHttpRequest();
+              xhr.open("POST", add_url, true);
 
-    <div id="playlists"></div>
+              // send the collected data as JSON
+              xhr.send(js);
 
-    <br>
-    </div>
-  <div class="columnPad" style="background-color:#fff"></div>
-  <div class="column" style="background-color:#aaa">
-    <h2>Videos</h2>
-    <div class="rowEven">
-      <input name="searchField" value="" style="width:65%"/>
-      <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleClick(this)">
-    </div>
-    <br>
-    <div class="rowOdd">
-      <input type="button" value="Upload Video" style="width:100%" onClick="JavaScript:handleNewVideo()">
-    </div>
-    <br>
+              // This will process results and update HTML as appropriate.
+              xhr.onloadend = function () {
+                console.log(xhr);
+                console.log(xhr.request);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                	if (xhr.status == 200) {
+            	      console.log ("XHR:" + xhr.responseText);
+            	      processResponse(arg1, arg2, xhr.responseText);
+                	} else if (xhr.status == 400) {
+                		alert ("unable to process request");
+                	}
+                } else {
+                  processResponse(arg1, arg2, "N/A");
+                }
+              };*/
+        }
+    </script>
+</head>
 
-    <div id="videos"></div>
+<body>
+    <form name="addForm" method="post">
+        <h1>Video Mashup</h1>
+        <link rel="stylesheet" href="index.css">
 
-    <br>
-  </div>
-</div>
-</form>
+        <div class="row">
+            <div class="column" style="background-color:#aaa">
+                <h2>Playlists</h2>
+                <div class="rowEven">
+                    <input type="button" value="My Library" style="width:100%" onClick="JavaScript:handleMyLibraryClick(this)">
+                </div>
+                <br>
+                <div class="rowOdd">
+                    <input type="button" value="New Playlist" style="width:100%" onClick="JavaScript:handleNewPlaylist()">
+                </div>
+                <br>
+
+                <div id="playlists"></div>
+
+                <br>
+            </div>
+
+            <div class="columnPad" style="background-color:#fff"></div>
+            <div class="column" style="background-color:#aaa">
+                <h2>Videos</h2>
+                <div class="rowEven">
+                    <input name="searchField" value="" style="width:65%" />
+                    <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                </div>
+                <br>
+                <div class="rowOdd">
+                    <input type="button" value="Upload Video" style="width:100%" onClick="JavaScript:handleNewVideo()">
+                </div>
+                <br>
+
+                <div id="videos"></div>
+
+                <br>
+            </div>
+        </div>
+    </form>
 
     <script>
-    makeList(1, playlistNum);
-    makeList(0, videoNum);
+        makeList(1, playlistNum);
+        makeList(0, videoNum);
     </script>
 
 </body>
+
 </html>
