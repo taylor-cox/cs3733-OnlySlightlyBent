@@ -26,7 +26,7 @@ public class ListAllVideosHandler implements RequestHandler<Object, AllVideosRes
 	public LambdaLogger logger;
 	
 	Library getLibrary() throws Exception {
-		logger.log("In getVideos");
+		logger.log("In getLibrary");
 		
 		VideosDAO dao = new VideosDAO();
 		
@@ -91,11 +91,8 @@ public class ListAllVideosHandler implements RequestHandler<Object, AllVideosRes
         
         try {
 			List<Video> list = getLibrary().getVideos();
-//			for(Video v : systemConstants()) {
-//				if (!list.contains(c)) {
-//					list.add(c);
-//				}
-//			}
+//			for(Video v : list)
+//				System.out.println(v.toString());
 			response = new AllVideosResponse(list, 200);
 		} catch (Exception e) {
 			response = new AllVideosResponse(403, e.getMessage());

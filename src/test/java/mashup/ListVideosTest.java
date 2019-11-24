@@ -22,7 +22,6 @@ public class ListVideosTest extends LambdaTest {
         boolean hasSpock = false;
         for (Video v : resp.list) {
         	if (v.character.equals("Spock")) { hasSpock = true; break; }
-        	System.out.println(v.toString());
         }
         Assert.assertTrue("Spock needs to be in table.", hasSpock);
         Assert.assertEquals(200, resp.statusCode);

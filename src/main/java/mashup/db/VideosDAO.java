@@ -109,14 +109,15 @@ public class VideosDAO {
         Library lib = new Library();
         try {
             Statement statement = conn.createStatement();
+            Statement statement2 = conn.createStatement();
             String query = "SELECT * FROM videos";
             ResultSet videos = statement.executeQuery(query);
             query = "SELECT * FROM library";
-            ResultSet library = statement.executeQuery(query);
+            ResultSet library = statement2.executeQuery(query);
 
             while(videos.next()) {
-                Video c = generateVideo(videos);
-                lib.getVideos().add(c);
+                Video video = generateVideo(videos);
+                lib.addVideo(video);
             }
             
             while(library.next()) {

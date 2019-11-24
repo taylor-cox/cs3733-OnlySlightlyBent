@@ -39,4 +39,13 @@ public class Library {
 		}
 		return false;
 	}
+	
+	public boolean addVideo(Video v) {
+		Video vid = videos.get(v.getID());
+		if(vid == null) {
+			this.videos.put(v.getID(), v);
+			return true;
+		}
+		return false;
+	}
 }
