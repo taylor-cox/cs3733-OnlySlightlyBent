@@ -21,6 +21,9 @@ var upload_video_url = base_url + "uploadVideo"; 							// POST
 // generated from aws. BAD IDEA to encode here, but just getting something done.
 var remote_url = "https://rct351a2w3.execute-api.us-east-1.amazonaws.com/secure/";
 
+// URL for videos
+var video_url = "https://3733onlyslightlybent.s3.amazonaws.com/video-clips/";
+
 var search_remote_url = remote_url + "remote";
 
 var apikey = "pyEG6SrJzP3kUyp2QhI7J4WCTxSA5Bs92b7PeIhC";
