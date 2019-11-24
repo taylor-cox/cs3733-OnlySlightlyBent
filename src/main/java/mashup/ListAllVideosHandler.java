@@ -91,8 +91,6 @@ public class ListAllVideosHandler implements RequestHandler<Object, AllVideosRes
         
         try {
 			List<Video> list = getLibrary().getVideos();
-//			for(Video v : list)
-//				System.out.println(v.toString());
 			response = new AllVideosResponse(list, 200);
 		} catch (Exception e) {
 			response = new AllVideosResponse(403, e.getMessage());

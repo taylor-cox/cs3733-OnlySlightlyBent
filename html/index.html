@@ -33,6 +33,11 @@
                 listHTML += isPlaylist ? "Playlist" : "Video";
                 listHTML += ' ' + (i + 1);
                 listHTML += ' name)</span>\n';
+                if (!isPlaylist) {
+                    listHTML += '<video width=300 height=200 controls>';
+                    listHTML += '<source src="https://3733onlyslightlybent.s3.amazonaws.com/video-clips/vlc-record-2019-11-10-13h19m35s-dvd____E__-_Trim.ogg" type="video/ogg">';
+                    listHTML += '</video>'
+                }
                 listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
                 listHTML += ' <button style="width:20%" onClick="JavaScript:handleDelete'
                 listHTML += isPlaylist ? "Playlist" : "Video";
@@ -128,11 +133,13 @@
             <div class="column" style="background-color:#aaa">
                 <h2>Playlists</h2>
                 <div class="rowEven">
-                    <input type="button" value="My Library" style="width:100%" onClick="JavaScript:handleMyLibraryClick(this)">
+                    <input type="button" value="My Library" style="width:100%"
+                        onClick="JavaScript:handleMyLibraryClick(this)">
                 </div>
                 <br>
                 <div class="rowOdd">
-                    <input type="button" value="New Playlist" style="width:100%" onClick="JavaScript:handleNewPlaylist()">
+                    <input type="button" value="New Playlist" style="width:100%"
+                        onClick="JavaScript:handleNewPlaylist()">
                 </div>
                 <br>
 
@@ -146,6 +153,7 @@
                 <h2>Videos</h2>
                 <div class="rowEven">
                     <input name="searchField" value="" style="width:65%" />
+
                     <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
                 </div>
                 <br>
