@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import mashup.model.Library;
 import mashup.model.Video;
 
 /**
@@ -104,20 +105,28 @@ public class VideosDAO {
     	return false;
     }
 
-    public List<Video> getAllVideos() throws Exception {
-        List<Video> allVideos = new ArrayList<>();
+    public Library getLibrary() throws Exception {
+        Library lib = new Library();
         try {
             Statement statement = conn.createStatement();
             String query = "SELECT * FROM videos";
-            ResultSet resultSet = statement.executeQuery(query);
+            ResultSet videos = statement.executeQuery(query);
+            query = "SELECT * FROM library";
+            ResultSet library = statement.executeQuery(query);
 
-            while (resultSet.next()) {
-                Video c = generateVideo(resultSet);
-                allVideos.add(c);
+            while(videos.next()) {
+                Video c = generateVideo(videos);
+                lib.getVideos().add(c);
             }
-            resultSet.close();
+            
+            while(library.next()) {
+            	lib.addFileName(library.getString("ID"), library.getString("FileName"));
+            }
+            
+            library.close();
+            videos.close();
             statement.close();
-            return allVideos;
+            return lib;
 
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
@@ -125,9 +134,10 @@ public class VideosDAO {
     }
     
     private Video generateVideo(ResultSet resultSet) throws Exception {
-    	String character  = resultSet.getString("character");
-        String quote = resultSet.getString("quote");
-        return new Video(character, quote, "");
+    	String character  = resultSet.getString("Character");
+        String quote = resultSet.getString("Quote");
+        String ID = resultSet.getString("ID");
+        return new Video(ID, character, quote, "");
     }
 
 }
