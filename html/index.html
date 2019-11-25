@@ -10,7 +10,7 @@
         var videoNum = 1;
         var selectedPlaylist = -1;
         var selectedVideo = -1;
-        var isAdmin = true;
+        var isAdmin;
         var videos = [];
 
         function createCORSRequest(method, url) {
@@ -160,6 +160,10 @@
 
         function updateAdminAccess(access) {
             isAdmin = access;
+            updateAdminSettings();
+        }
+
+        function updateAdminSettings() {
             for (var n = 0; n < columns.length; n++) {
                 columns[n].className = isAdmin?"columnAdmin":"column";
             }
@@ -255,9 +259,10 @@
 
 <body>
     <form name="addForm" method="post">
-        <h1>Video Mashup</h1>
+        <span class="header">Video Mashup</span>
         <link rel="stylesheet" href="index.css">
-
+        <img src="Heineman.png"
+            onClick="JavaScript:updateAdminAccess(!isAdmin)">
         <div class="row">
             <div name="playlistColumn" class="column">
                 <h2>Playlists</h2>
@@ -336,6 +341,10 @@
             window.alert("Hi there!");
         }*/
         initialLoad();
+    </script>
+
+    <script>
+        updateAdminSettings();
     </script>
 
 </body>

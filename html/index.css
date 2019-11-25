@@ -24,7 +24,7 @@
 	padding-top: 0px;
 	padding-left: 2%;
 	padding-right: 2%;
-	background-color: #444;
+	background-color: #777;
 }
 
 .columnAdminPad {
@@ -63,6 +63,10 @@
 .rowSelected {
 	padding: 1%;
 	background-color: #6633ff;
+}
+
+.header {
+	font: 1em comic-sans;
 }
 
 img {
