@@ -15,6 +15,7 @@
 	float: left;
 	width: 10%;
 	padding: 10px;
+	background-color: #fff;
 }
 
 .columnAdmin {
@@ -30,6 +31,7 @@
 	float: left;
 	width: 5%;
 	padding: 10px;
+	background-color: #fff;
 }
 
 .columnName {

@@ -59,8 +59,8 @@
                 } else {
                     processResponse("N/A");
                 }
-                makeList(1, playlistNum);
-                makeList(0, videos.length);
+                makeList(1, 0, playlistNum);
+                makeList(0, 0, videos.length);
             };
 
         }
@@ -78,7 +78,7 @@
             return js;
         }
 
-        function makeList(isPlaylist, num) {
+        function makeList(isPlaylist, isSite, num) {
             var listHTML = '';
             var isEven = 1;
             var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
@@ -162,6 +162,14 @@
             isAdmin = access;
             for (var n = 0; n < columns.length; n++) {
                 columns[n].className = isAdmin?"columnAdmin":"column";
+            }
+            var pads = document.getElementsByName("pad");
+            for (var n = 0; n < pads.length; n++) {
+                pads[n].className = isAdmin?"columnAdminPad":"columnPad";
+            }
+            if (!isAdmin) {
+                var siteColumn = document.getElementsByName("sites")[0];
+                siteColumn.parentNode.removeChild(siteColumn);
             }
         }
 
@@ -269,7 +277,7 @@
                 <br>
             </div>
 
-            <div class="columnPad" style="background-color:#fff"></div>
+            <div name="pad" class="columnPad"></div>
             <div name="videoColumn" class="column">
                 <h2>Videos</h2>
                 <div class="rowEven">
@@ -288,14 +296,34 @@
 
                 <br>
             </div>
-            <div id="sites"></div>
+            <div name="pad" class="columnPad"></div>
+            <div name="siteColumn" class="column">
+                <h2>Sites</h2>
+                <div class="rowEven">
+                    <input name="searchField" value="" style="width:65%" />
+
+                    <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                </div>
+                <br>
+                <div class="rowOdd">
+                    <input name="searchField" value="" style="width:65%" />
+
+                    <input type="button" value="Register" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                </div>
+                <br>
+
+                <div id="sites"></div>
+
+                <br>
+            </div>
         </div>
     </form>
 
     <script>
     var columns = [
         document.getElementsByName('playlistColumn')[0],
-        document.getElementsByName('videoColumn')[0]
+        document.getElementsByName('videoColumn')[0],
+        document.getElementsByName('siteColumn')[0]
     ]
     updateAdminAccess(true);
     </script>
