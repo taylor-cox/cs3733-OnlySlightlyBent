@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mashup.model.Library;
+import mashup.model.Playlist;
 import mashup.model.Video;
 
 /**
@@ -106,8 +107,12 @@ public class VideosDAO {
     }
 
     public Library getLibrary() throws Exception {
+    	/**
+    	 * Gets all the videos (and data corresponding) from the database(s).
+    	 */
         Library lib = new Library();
         try {
+        	// Sets up the querys which we will be using to parse the databases
             Statement statement = conn.createStatement();
             Statement statement2 = conn.createStatement();
             String query = "SELECT * FROM videos";
@@ -115,15 +120,18 @@ public class VideosDAO {
             query = "SELECT * FROM library";
             ResultSet library = statement2.executeQuery(query);
 
+            // Sets up the character, quote, ID for the videos in library
             while(videos.next()) {
                 Video video = generateVideo(videos);
                 lib.addVideo(video);
             }
             
+            // Adds filenames to the corresponding videos
             while(library.next()) {
             	lib.addFileName(library.getString("ID"), library.getString("FileName"));
             }
             
+            // REMEMBER TO CLOSE ALL CONNECTIONS!
             library.close();
             videos.close();
             statement.close();
@@ -132,6 +140,38 @@ public class VideosDAO {
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
         }
+    }
+    
+    public ArrayList<Playlist> getPlaylists() {
+    	ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+        try {
+        	// Sets up the querys which we will be using to parse the databases
+            Statement statement = conn.createStatement();
+            Statement statement2 = conn.createStatement();
+            String query = "SELECT * FROM playlists";
+            ResultSet playlistsResp = statement.executeQuery(query);
+
+            // Sets up the character, quote, ID for the videos in library
+            while(playlistsResp.next()) {
+                Playlist playlist = generateVideo(videos);
+                playlists.add(playlist);
+            }
+            
+            // REMEMBER TO CLOSE ALL CONNECTIONS!
+            playlistsResp.close();
+            statement.close();
+            return playlists;
+
+        } catch (Exception e) {
+            throw new Exception("Failed in getting books: " + e.getMessage());
+        }
+    }
+    
+    private Playlist generatePlaylist(ResultSet resultSet) throws Exception {
+    	String character  = resultSet.getString("Character");
+        String quote = resultSet.getString("Quote");
+        String ID = resultSet.getString("ID");
+        return new Playlist(ID, character, quote, "");
     }
     
     private Video generateVideo(ResultSet resultSet) throws Exception {
