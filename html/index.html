@@ -2,28 +2,88 @@
 
 <head>
     <script type="text/javascript">
-        var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
+        var base_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/beta/";
+        var list_video_url = base_url + "listVideo";
+        // var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
+        var get_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/secure/";
         var playlistNum = 1;
         var videoNum = 1;
         var selectedPlaylist = -1;
         var selectedVideo = -1;
+        var videos = [];
 
-        function processResponse(arg1, arg2, result) {
+        function createCORSRequest(method, url) {
+            var xhr = new XMLHttpRequest();
+            if ("withCredentials" in xhr) {
+
+                // Check if the XMLHttpRequest object has a "withCredentials" property.
+                // "withCredentials" only exists on XMLHTTPRequest2 objects.
+                xhr.open(method, url, true);
+
+            } else if (typeof XDomainRequest != "undefined") {
+
+                // Otherwise, check if XDomainRequest.
+                // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+                xhr = new XDomainRequest();
+                xhr.open(method, url);
+
+            } else {
+
+                // Otherwise, CORS is not supported by the browser.
+                xhr = null;
+
+            }
+            return xhr;
+        }
+
+        function initialLoad() {
+            var data = {};
+            var js = JSON.stringify(data);
+
+            console.log("JS:" + js);
+            var xhr = createCORSRequest("GET", list_video_url)
+            xhr.send();
+
+            // This will process results and update HTML as appropriate.
+            xhr.onloadend = function () {
+                console.log(xhr);
+                console.log(xhr.request);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        console.log("XHR:" + xhr.responseText);
+                        processResponse(xhr.responseText);
+                    } else if (xhr.status == 400) {
+                        alert("unable to process request");
+                    }
+                } else {
+                    processResponse("N/A");
+                }
+                makeList(1, playlistNum);
+                makeList(0, videos.length);
+            };
+
+        }
+
+        function processResponse(result) {
             // Can grab any DIV or SPAN HTML element and can then manipulate its
             // contents dynamically via javascript
             console.log("result:" + result);
             var js = JSON.parse(result);
-
-            var computation = js["result"];
-
-            // Update computation result
-            document.addForm.result.value = computation
+            for (video in js.list) {
+                console.log(js.list[video]);
+                videos[video] = js.list[video];
+                videoNum++;
+            }
+            return js;
         }
 
         function makeList(isPlaylist, num) {
             var listHTML = '';
             var isEven = 1;
+            var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
             for (var i = 0; i < num; i++) {
+                var videoURL = url + videos[i].fileName;
+                console.log(videoURL)
                 if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
                 else if (isEven) listHTML += '<div class="rowEven"';
                 else listHTML += '<div class="rowOdd"';
@@ -35,7 +95,7 @@
                 listHTML += ' name)</span>\n';
                 if (!isPlaylist) {
                     listHTML += '<video width=300 height=200 controls>';
-                    listHTML += '<source src="https://3733onlyslightlybent.s3.amazonaws.com/video-clips/vlc-record-2019-11-10-13h19m35s-dvd____E__-_Trim.ogg" type="video/ogg">';
+                    listHTML += '<source src=' + videoURL + ' type="video/ogg">';
                     listHTML += '</video>'
                 }
                 listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
@@ -170,8 +230,7 @@
     </form>
 
     <script>
-        makeList(1, playlistNum);
-        makeList(0, videoNum);
+        initialLoad();
     </script>
 
 </body>
