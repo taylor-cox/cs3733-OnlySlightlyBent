@@ -10,7 +10,10 @@
         var videoNum = 1;
         var selectedPlaylist = -1;
         var selectedVideo = -1;
+<<<<<<< HEAD
         var isAdmin = true;
+=======
+>>>>>>> refs/remotes/origin/master
         var videos = [];
 
         function createCORSRequest(method, url) {
@@ -82,6 +85,7 @@
             var listHTML = '';
             var isEven = 1;
             var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
+<<<<<<< HEAD
             for (var i = 0; i < num; i++) {
                 var videoURL = url + videos[i].fileName;
                 console.log(videoURL)
@@ -126,7 +130,11 @@
             html += '    <br>'
             var listHTML = '';
             var isEven = 1;
+=======
+>>>>>>> refs/remotes/origin/master
             for (var i = 0; i < num; i++) {
+                var videoURL = url + videos[i].fileName;
+                console.log(videoURL)
                 if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
                 else if (isEven) listHTML += '<div class="rowEven"';
                 else listHTML += '<div class="rowOdd"';
@@ -281,6 +289,7 @@
     </form>
 
     <script>
+<<<<<<< HEAD
     var columns = [
         document.getElementsByName('playlistColumn')[0],
         document.getElementsByName('videoColumn')[0]
@@ -295,6 +304,9 @@
             addSites();
             window.alert("Hi there!");
         }*/
+=======
+        initialLoad();
+>>>>>>> refs/remotes/origin/master
     </script>
 
 </body>
