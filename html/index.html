@@ -10,6 +10,7 @@
         var videoNum = 1;
         var selectedPlaylist = -1;
         var selectedVideo = -1;
+        var isAdmin = true;
         var videos = [];
 
         function createCORSRequest(method, url) {
@@ -98,18 +99,70 @@
                     listHTML += '<source src=' + videoURL + ' type="video/ogg">';
                     listHTML += '</video>'
                 }
-                listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-                listHTML += ' <button style="width:20%" onClick="JavaScript:handleDelete'
+                if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
+                listHTML += ' <img src="trash_can.png" onClick="JavaScript:handleDelete'
                 listHTML += isPlaylist ? "Playlist" : "Video";
                 listHTML += '(';
                 listHTML += i;
                 listHTML += ')">\n';
-                listHTML += '   <img src="trash_can.png">\n';
-                listHTML += '   <noscript><span>X</span></noscript>\n';
-                listHTML += ' </button>\n';
                 listHTML += '</div>\n';
             }
             document.getElementById(isPlaylist ? "playlists" : "videos").innerHTML = listHTML;
+        }
+        
+        /*function addSites() {
+            var html = '';
+            html += '<div class="columnPad" style="background-color:#fff"></div>'
+            html += '<div name="siteColumn" class="column">'
+            html += '    <h2>Sites</h2>'
+            html += '    <div class="rowEven">'
+            html += '        <input name="searchField" value="" style="width:65%" />'
+            html += '        <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">'
+            html += '    </div>'
+            html += '    <br>'
+            html += '    <div class="rowOdd">'
+            html += '        <input type="button" value="Upload Video" style="width:100%" onClick="JavaScript:handleNewVideo()">'
+            html += '    </div>'
+            html += '    <br>'
+            var listHTML = '';
+            var isEven = 1;
+            
+            for (var i = 0; i < num; i++) {
+                var videoURL = url + videos[i].fileName;
+                console.log(videoURL)
+                if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
+                else if (isEven) listHTML += '<div class="rowEven"';
+                else listHTML += '<div class="rowOdd"';
+                isEven = !isEven;
+                listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
+                listHTML += '>\n <span class="columnName" style="width:50%">(';
+                listHTML += isPlaylist ? "Playlist" : "Video";
+                listHTML += ' ' + (i + 1);
+                listHTML += ' name)</span>\n';
+                if (!isPlaylist) {
+                    listHTML += '<video width=300 height=200 controls>';
+                    listHTML += '<source src=' + videoURL + ' type="video/ogg">';
+                    listHTML += '</video>'
+                }
+                if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
+                listHTML += ' <img src="trash_can.png" onClick="JavaScript:handleDelete'
+                listHTML += isPlaylist ? "Playlist" : "Video";
+                listHTML += '(';
+                listHTML += i;
+                listHTML += ')">\n';
+                listHTML += '</div>\n';
+            }
+            html += listHTML;
+            html += '    <br>'
+            html += '</div>'
+            document.getElementById("sites").innerHTML = html;
+         }*/
+
+        function updateAdminAccess(access) {
+            isAdmin = access;
+            for (var n = 0; n < columns.length; n++) {
+                columns[n].className = isAdmin?"columnAdmin":"column";
+            }
         }
 
         function selectPlaylist(p) {
@@ -198,7 +251,7 @@
         <link rel="stylesheet" href="index.css">
 
         <div class="row">
-            <div class="column" style="background-color:#aaa">
+            <div name="playlistColumn" class="column">
                 <h2>Playlists</h2>
                 <div class="rowEven">
                     <input type="button" value="My Library" style="width:100%"
@@ -217,7 +270,7 @@
             </div>
 
             <div class="columnPad" style="background-color:#fff"></div>
-            <div class="column" style="background-color:#aaa">
+            <div name="videoColumn" class="column">
                 <h2>Videos</h2>
                 <div class="rowEven">
                     <input name="searchField" value="" style="width:65%" />
@@ -235,10 +288,25 @@
 
                 <br>
             </div>
+            <div id="sites"></div>
         </div>
     </form>
 
     <script>
+    var columns = [
+        document.getElementsByName('playlistColumn')[0],
+        document.getElementsByName('videoColumn')[0]
+    ]
+    updateAdminAccess(true);
+    </script>
+
+    <script>
+        initialLoad();
+        /*if (isAdmin) {
+            window.alert("Hi there!");
+            addSites();
+            window.alert("Hi there!");
+        }*/
         initialLoad();
     </script>
 
