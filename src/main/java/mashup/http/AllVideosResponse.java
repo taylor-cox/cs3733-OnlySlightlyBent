@@ -5,6 +5,10 @@ import java.util.List;
 import mashup.model.Video;
 
 public class AllVideosResponse {
+	/**
+	 * Contains a list of all the videos in the library (our s3 bucket),
+	 * the status code and if there was an error, the error.
+	 */
 	public final List<Video> list;
 	public final int statusCode;
 	public final String error;
@@ -22,7 +26,7 @@ public class AllVideosResponse {
 	}
 	
 	public String toString() {
-		if (list == null) { return "EmptyConstants"; }
+		if (list == null) { return "EmptyVideos"; }
 		return "AllVideos(" + list.size() + ")";
 	}
 }

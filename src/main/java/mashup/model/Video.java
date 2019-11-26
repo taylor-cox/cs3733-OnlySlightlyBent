@@ -3,6 +3,9 @@ package mashup.model;
 import java.util.UUID;
 
 public class Video {
+	/**
+	 * Holds all the data for an available video.
+	 */
 	public String ID;
 	public String character;
 	public String quote;
