@@ -2,10 +2,13 @@ package mashup.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import mashup.model.Library;
 import mashup.model.Playlist;
+import mashup.model.PlaylistEntry;
 import mashup.model.Video;
 
 /**
@@ -142,36 +145,51 @@ public class VideosDAO {
         }
     }
     
-    public ArrayList<Playlist> getPlaylists() {
-    	ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+    public Collection<Playlist> getPlaylists() throws Exception {
+    	HashMap<String, Playlist> playlists = new HashMap<String, Playlist>();
+    	HashMap<String, String> videos = new HashMap<String, String>();
         try {
         	// Sets up the querys which we will be using to parse the databases
             Statement statement = conn.createStatement();
-            Statement statement2 = conn.createStatement();
-            String query = "SELECT * FROM playlists";
+            String query = "SELECT * FROM playlist";
             ResultSet playlistsResp = statement.executeQuery(query);
-
+            
             // Sets up the character, quote, ID for the videos in library
             while(playlistsResp.next()) {
-                Playlist playlist = generateVideo(videos);
-                playlists.add(playlist);
+            	String id = playlistsResp.getString("id");
+            	Playlist pl = playlists.get(id);
+            	if(pl == null) pl = new Playlist(id);
+            	PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
+            	videos.put(toAdd.getVideoID(), toAdd.getVideoID());
+                pl.addPlaylistEntry(toAdd);
+                if(playlists.putIfAbsent(id, pl) == null) {
+                	pl = playlists.get(id);
+                	pl.addPlaylistEntry(toAdd);
+                }
             }
+            
+            query = "SELECT * FROM videos WHERE ID IN (";
+            
+            for(String ID : videos.values())
+            	query += "'" + ID  + "', ";
+            
+            query += ")";
+            
             
             // REMEMBER TO CLOSE ALL CONNECTIONS!
             playlistsResp.close();
             statement.close();
-            return playlists;
+            return playlists.values();
 
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
         }
     }
     
-    private Playlist generatePlaylist(ResultSet resultSet) throws Exception {
-    	String character  = resultSet.getString("Character");
-        String quote = resultSet.getString("Quote");
-        String ID = resultSet.getString("ID");
-        return new Playlist(ID, character, quote, "");
+    private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
+        String video = resultSet.getString("video");
+        String order = resultSet.getString("order");
+        return new PlaylistEntry(video, Integer.parseInt(order));
     }
     
     private Video generateVideo(ResultSet resultSet) throws Exception {

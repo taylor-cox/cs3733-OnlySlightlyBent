@@ -8,36 +8,27 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import mashup.http.AllPlaylistResponse;
+import mashup.http.AllVideosResponse;
+import mashup.model.Playlist;
+import mashup.model.Video;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class ListPlaylistHandlerTest {
+public class ListPlaylistHandlerTest extends LambdaTest {
 
-    private static Object input;
-
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
-
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
-
-    @Test
-    public void testListPlaylistHandler() {
-        ListPlaylistHandler handler = new ListPlaylistHandler();
-        Context ctx = createContext();
-
-        String output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+	@Test
+    public void testGetPlaylists() throws IOException {
+    	ListPlaylistHandler handler = new ListPlaylistHandler();
+    	
+        AllPlaylistResponse resp = handler.handleRequest(null, createContext("list"));
+        
+        for (Playlist p : resp.list) {
+        	System.out.println(p.toString());
+//        	if (p.character.equals("Spock")) { hasSpock = true; break; }
+        }
+//        Assert.assertTrue("Spock needs to be in table.", hasSpock);
+        Assert.assertEquals(200, resp.statusCode);
     }
 }
