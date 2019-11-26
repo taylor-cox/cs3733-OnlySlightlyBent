@@ -1,6 +1,18 @@
 package mashup.model;
 
 public class PlaylistEntry {
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public void setVideoID(String videoID) {
+		this.videoID = videoID;
+	}
+
 	int index;
 	String videoID;
 	
