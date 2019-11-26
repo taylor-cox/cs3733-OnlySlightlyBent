@@ -7,12 +7,12 @@ import java.util.List;
 import mashup.model.Playlist;
 
 public class AllPlaylistResponse {
-	public final Collection<Playlist> list;
+	public final List<Playlist> list;
 	public final int statusCode;
 	public final String error;
 	
-	public AllPlaylistResponse(Collection<Playlist> list2, int code) {
-		this.list = list2;
+	public AllPlaylistResponse(List<Playlist> list, int code) {
+		this.list = list;
 		this.statusCode = code;
 		this.error = "";
 	}

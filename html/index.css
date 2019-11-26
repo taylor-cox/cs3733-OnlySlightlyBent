@@ -9,6 +9,7 @@
 	padding-left: 2%;
 	padding-right: 2%;
 	background-color: #aaa;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 .columnPad {
@@ -25,6 +26,7 @@
 	padding-left: 2%;
 	padding-right: 2%;
 	background-color: #777;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 .columnAdminPad {
@@ -53,20 +55,23 @@
 .rowEven {
 	padding: 1%;
 	background-color: #ccc;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 .rowOdd {
 	padding: 1%;
 	background-color: #eee;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 .rowSelected {
 	padding: 1%;
 	background-color: #6633ff;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 .header {
-	font: 1em comic-sans;
+	font: 1em "Comic Sans MS", cursive, sans-seriff;
 }
 
 img {

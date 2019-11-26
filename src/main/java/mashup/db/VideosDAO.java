@@ -145,7 +145,7 @@ public class VideosDAO {
         }
     }
     
-    public Collection<Playlist> getPlaylists() throws Exception {
+    public List<Playlist> getPlaylists() throws Exception {
     	HashMap<String, Playlist> playlists = new HashMap<String, Playlist>();
     	HashMap<String, String> videos = new HashMap<String, String>();
         try {
@@ -160,6 +160,7 @@ public class VideosDAO {
             	Playlist pl = playlists.get(id);
             	if(pl == null) pl = new Playlist(id);
             	PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
+            	
             	videos.put(toAdd.getVideoID(), toAdd.getVideoID());
                 pl.addPlaylistEntry(toAdd);
                 if(playlists.putIfAbsent(id, pl) == null) {
@@ -179,7 +180,10 @@ public class VideosDAO {
             // REMEMBER TO CLOSE ALL CONNECTIONS!
             playlistsResp.close();
             statement.close();
-            return playlists.values();
+            ArrayList<Playlist> plReturn = new ArrayList<Playlist>();
+            for(Playlist p : playlists.values())
+            	plReturn.add(p);
+            return plReturn;
 
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());

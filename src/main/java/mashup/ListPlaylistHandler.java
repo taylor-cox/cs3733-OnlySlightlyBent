@@ -19,7 +19,7 @@ public class ListPlaylistHandler implements RequestHandler<Object, AllPlaylistRe
 	
 	public LambdaLogger logger;
 	
-	Collection<Playlist> getPlaylists() throws Exception {
+	List<Playlist> getPlaylists() throws Exception {
 		/**
 		 * Get Library returns the available library, consisting of s3 segments we uploaded.
 		 */
@@ -35,7 +35,7 @@ public class ListPlaylistHandler implements RequestHandler<Object, AllPlaylistRe
         AllPlaylistResponse response;
         
         try {
-			Collection<Playlist> list = getPlaylists();
+			List<Playlist> list = getPlaylists();
 			response = new AllPlaylistResponse(list, 200);
 		} catch (Exception e) {
 			response = new AllPlaylistResponse(403, e.getMessage());
