@@ -257,34 +257,6 @@
 
             window.alert(searchField);
             processResponse();
-
-            /*  var data = {};
-              data["arg1"] = arg1;
-              data["arg2"] = arg2;
-
-              var js = JSON.stringify(data);
-              console.log("JS:" + js);
-              var xhr = new XMLHttpRequest();
-              xhr.open("POST", add_url, true);
-
-              // send the collected data as JSON
-              xhr.send(js);
-
-              // This will process results and update HTML as appropriate.
-              xhr.onloadend = function () {
-                console.log(xhr);
-                console.log(xhr.request);
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                	if (xhr.status == 200) {
-            	      console.log ("XHR:" + xhr.responseText);
-            	      processResponse(arg1, arg2, xhr.responseText);
-                	} else if (xhr.status == 400) {
-                		alert ("unable to process request");
-                	}
-                } else {
-                  processResponse(arg1, arg2, "N/A");
-                }
-              };*/
         }
     </script>
 </head>
@@ -362,7 +334,7 @@
         document.getElementsByName('videoColumn')[0],
         document.getElementsByName('siteColumn')[0]
     ]
-    updateAdminAccess(true);
+    updateAdminAccess(false);
     </script>
 
     <script>
