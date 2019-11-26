@@ -4,6 +4,7 @@
     <script type="text/javascript">
         var base_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/beta/";
         var list_video_url = base_url + "listVideo";
+        var list_playlists_url = base_url + "listPlaylist";
         // var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
         var get_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/secure/";
         var playlistNum = 1;
@@ -12,6 +13,7 @@
         var selectedVideo = -1;
         var isAdmin;
         var videos = [];
+        var playlists = [];
 
         function createCORSRequest(method, url) {
             var xhr = new XMLHttpRequest();
@@ -47,11 +49,11 @@
 
             // This will process results and update HTML as appropriate.
             xhr.onloadend = function () {
-                console.log(xhr);
-                console.log(xhr.request);
+                // console.log(xhr);
+                // console.log(xhr.request);
                 if (xhr.readyState == XMLHttpRequest.DONE) {
                     if (xhr.status == 200) {
-                        console.log("XHR:" + xhr.responseText);
+                        // console.log("XHR:" + xhr.responseText);
                         processListVideoResponse(xhr.responseText);
                     } else if (xhr.status == 400) {
                         alert("unable to process request");
@@ -59,21 +61,50 @@
                 } else {
                     processListVideoResponse("N/A");
                 }
-                makeList(1, 0, playlistNum);
-                makeList(0, 0, videos.length);
             };
 
+            var xhr2 = createCORSRequest("GET", list_playlists_url);
+            xhr2.send();
+
+            xhr2.onloadend = function () {
+                console.log(xhr);
+                console.log(xhr.request);
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        // console.log("XHR:" + xhr.responseText);
+                        processListPlaylistsResponse(xhr.responseText);
+                    } else if (xhr.status == 400) {
+                        alert("unable to process request");
+                    }
+                } else {
+                    processListPlaylistsResponse("N/A");
+                }
+            };
+
+            makeList(1, 0, playlistsNum);
+            makeList(0, 0, videos.length);
         }
 
         function processListVideoResponse(result) {
             // Can grab any DIV or SPAN HTML element and can then manipulate its
             // contents dynamically via javascript
-            console.log("result:" + result);
+            // console.log("result:" + result);
             var js = JSON.parse(result);
             for (video in js.list) {
-                console.log(js.list[video]);
+                // console.log(js.list[video]);
                 videos[video] = js.list[video];
                 videoNum++;
+            }
+            return js;
+        }
+
+        function processListPlaylistsResponse(result) {
+            console.log("result:" + result);
+            var js = JSON.parse(result);
+            for (playlist in js.list) {
+                console.log(js.list[playlist]);
+                playlists[playlists] = js.list[playlist];
+                playlistNum++;
             }
             return js;
         }
@@ -83,8 +114,9 @@
             var isEven = 1;
             var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
             for (var i = 0; i < num; i++) {
-                var videoURL = url + videos[i].fileName;
-                console.log(videoURL)
+                if(vidoes != null)
+                    var videoURL = url + videos[i].fileName;
+                // console.log(videoURL);
                 if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
                 else if (isEven) listHTML += '<div class="rowEven"';
                 else listHTML += '<div class="rowOdd"';
