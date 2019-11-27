@@ -43,7 +43,7 @@
             var data = {};
             var js = JSON.stringify(data);
 
-            console.log("In initial load.")
+            console.log("In initial load.");
 
             // console.log("JS:" + js);
             var xhr = createCORSRequest("GET", list_video_url);
@@ -68,6 +68,8 @@
                 makeList(0, 0, videos.length);
             };
 
+
+
             var xhr2 = createCORSRequest("GET", list_playlist_url);
             xhr2.send();
 
@@ -85,7 +87,7 @@
                 } else {
                     processListPlaylistResponse("N/A");
                 }
-                makeList(1, 0, playlists.length);
+                setTimeout(function () {makeList(1, 0, playlists.length)}, 2000);
             };
         }
 
