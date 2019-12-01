@@ -1,288 +1,17 @@
 <html>
 
 <head>
-    <script type="text/javascript">
-        var base_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/beta/";
-        var list_video_url = base_url + "listVideo";
-        var list_playlist_url = base_url + "listPlaylist";
-        // var add_url = "https://q0ec12olg0.execute-api.us-east-1.amazonaws.com/beta/calculator";
-        var get_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/secure/";
-        var playlistNum = 1;
-        var videoNum = 1;
-        var selectedPlaylist = -1;
-        var selectedVideo = -1;
-        var isAdmin;
-        var videos = [];
-        var playlists = [];
-
-        function createCORSRequest(method, url) {
-            var xhr = new XMLHttpRequest();
-            if ("withCredentials" in xhr) {
-
-                // Check if the XMLHttpRequest object has a "withCredentials" property.
-                // "withCredentials" only exists on XMLHTTPRequest2 objects.
-                xhr.open(method, url, true);
-
-            } else if (typeof XDomainRequest != "undefined") {
-
-                // Otherwise, check if XDomainRequest.
-                // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-                xhr = new XDomainRequest();
-                xhr.open(method, url);
-
-            } else {
-
-                // Otherwise, CORS is not supported by the browser.
-                xhr = null;
-
-            }
-            return xhr;
-        }
-
-        function initialLoad() {
-            var data = {};
-            var js = JSON.stringify(data);
-
-            console.log("In initial load.");
-
-            // console.log("JS:" + js);
-            var xhr = createCORSRequest("GET", list_video_url);
-            xhr.send();
-
-            // This will process results and update HTML as appropriate.
-            // FOR LIST VIDEOS
-            console.log("Attempting to process videos...");
-            xhr.onloadend = function () {
-                // console.log(xhr);
-                // console.log(xhr.request);
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-                        // console.log("XHR:" + xhr.responseText);
-                        processListVideoResponse(xhr.responseText);
-                    } else if (xhr.status == 400) {
-                        alert("unable to process request");
-                    }
-                } else {
-                    processListVideoResponse("N/A");
-                }
-                makeList(0, 0, videos.length);
-            };
-
-
-
-            var xhr2 = createCORSRequest("GET", list_playlist_url);
-            xhr2.send();
-
-            console.log("Attempting to process playlists...");
-            xhr2.onloadend = function () {
-                // console.log(xhr);
-                // console.log(xhr.request);
-                if (xhr2.readyState == XMLHttpRequest.DONE) {
-                    if (xhr2.status == 200) {
-                        // console.log("XHR:" + xhr.responseText);
-                        processListPlaylistResponse(xhr2.responseText);
-                    } else if (xhr2.status == 400) {
-                        alert("unable to process request");
-                    }
-                } else {
-                    processListPlaylistResponse("N/A");
-                }
-                setTimeout(function () {makeList(1, 0, playlists.length)}, 2000);
-            };
-        }
-
-        function processListVideoResponse(result) {
-            // Can grab any DIV or SPAN HTML element and can then manipulate its
-            // contents dynamically via javascript
-            // console.log("result:" + result);
-            var js = JSON.parse(result);
-            for (video in js.list) {
-                console.log(js.list[video]);
-                videos[video] = js.list[video];
-                videoNum++;
-            }
-            return js;
-        }
-
-        function processListPlaylistResponse(result) {
-            var js = JSON.parse(result);
-            console.log(js.list)
-            for(pl in js.list) {
-                console.log(js.list[pl]);
-                playlists[pl] = js.list[pl];
-                playlistNum++;
-            }
-            return js;
-        }
-
-        function makeList(isPlaylist, isSite, num) {
-            var listHTML = '';
-            var isEven = 1;
-            var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
-            for (var i = 0; i < num; i++) {
-                var videoURL = url + videos[i].fileName;
-                var videoQuote = videos[i].quote;
-                var videoCharacter = videos[i].character;
-                console.log(videoURL)
-                if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
-                else if (isEven) listHTML += '<div class="rowEven"';
-                else listHTML += '<div class="rowOdd"';
-                isEven = !isEven;
-                listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
-                listHTML += '>\n <span class="columnName" style="width:50%">';
-
-
-                // listHTML += isPlaylist ? "Playlist" : "Video";
-                // listHTML += ' ' + (i + 1);
-                // listHTML += ' name)</span>\n';
-                if(isPlaylist) {
-                    listHTML += playlists[i].id + '</span>\n';
-                } else {
-                    listHTML += videoCharacter + ', "' + videoQuote + '"';
-                    listHTML += '</span>\n';
-                }
-
-                if (!isPlaylist) {
-                    listHTML += '<video width=300 height=200 controls>';
-                    listHTML += '<source src=' + videoURL + ' type="video/ogg">';
-                    listHTML += '</video>'
-                }
-                if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-                listHTML += ' <img src="trash_can.png" onClick="JavaScript:handleDelete'
-                listHTML += isPlaylist ? "Playlist" : "Video";
-                listHTML += '(';
-                listHTML += i;
-                listHTML += ')">\n';
-                listHTML += '</div>\n';
-            }
-            document.getElementById(isPlaylist ? "playlists" : "videos").innerHTML = listHTML;
-        }
-
-        /*function addSites() {
-            var html = '';
-            html += '<div class="columnPad" style="background-color:#fff"></div>'
-            html += '<div name="siteColumn" class="column">'
-            html += '    <h2>Sites</h2>'
-            html += '    <div class="rowEven">'
-            html += '        <input name="searchField" value="" style="width:65%" />'
-            html += '        <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">'
-            html += '    </div>'
-            html += '    <br>'
-            html += '    <div class="rowOdd">'
-            html += '        <input type="button" value="Upload Video" style="width:100%" onClick="JavaScript:handleNewVideo()">'
-            html += '    </div>'
-            html += '    <br>'
-            var listHTML = '';
-            var isEven = 1;
-
-            for (var i = 0; i < num; i++) {
-                var videoURL = url + videos[i].fileName;
-                console.log(videoURL)
-                if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
-                else if (isEven) listHTML += '<div class="rowEven"';
-                else listHTML += '<div class="rowOdd"';
-                isEven = !isEven;
-                listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
-                listHTML += '>\n <span class="columnName" style="width:50%">(';
-                listHTML += isPlaylist ? "Playlist" : "Video";
-                listHTML += ' ' + (i + 1);
-                listHTML += ' name)</span>\n';
-                if (!isPlaylist) {
-                    listHTML += '<video width=300 height=200 controls>';
-                    listHTML += '<source src=' + videoURL + ' type="video/ogg">';
-                    listHTML += '</video>'
-                }
-                if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-                listHTML += ' <img src="trash_can.png" onClick="JavaScript:handleDelete'
-                listHTML += isPlaylist ? "Playlist" : "Video";
-                listHTML += '(';
-                listHTML += i;
-                listHTML += ')">\n';
-                listHTML += '</div>\n';
-            }
-            html += listHTML;
-            html += '    <br>'
-            html += '</div>'
-            document.getElementById("sites").innerHTML = html;
-         }*/
-
-        function updateAdminAccess(access) {
-            isAdmin = access;
-            updateAdminSettings();
-        }
-
-        function updateAdminSettings() {
-            for (var n = 0; n < columns.length; n++) {
-                columns[n].className = isAdmin?"columnAdmin":"column";
-            }
-            var pads = document.getElementsByName("pad");
-            for (var n = 0; n < pads.length; n++) {
-                pads[n].className = isAdmin?"columnAdminPad":"columnPad";
-            }
-            if (!isAdmin) {
-                var siteColumn = document.getElementsByName("sites")[0];
-                siteColumn.parentNode.removeChild(siteColumn);
-            }
-        }
-
-        function selectPlaylist(p) {
-            selectedPlaylist = p;
-            makeList(1, playlistNum);
-        }
-
-        function selectVideo(v) {
-            selectedVideo = v;
-            makeList(0, videoNum);
-        }
-
-        function handleDeleteVideo(p) {
-            videoNum--;
-            makeList(0, videoNum);
-        }
-
-        function handleNewVideo() {
-            // videoNum++;
-            // makeList(0, videoNum);
-            var form = document.createForm;
-            var data = {};
-            data["name"] = form.constantName.value;
-
-            if (form.system.checked) {  // be sure to flag system constant requests...
-                data["system"] = true;
-            }
-            var segments = document.createForm.base64Encoding.value.split(',');
-        }
-
-        function handleDeletePlaylist(p) {
-            playlistNum--;
-            makeList(1, playlistNum);
-        }
-
-        function handleNewPlaylist() {
-            playlistNum++;
-            makeList(1, playlistNum);
-        }
-
-        function handleMyLibraryClick() {
-            window.alert("My library has been clicked.")
-        }
-
-        function handleSearchClick(e) {
-            var form = document.addForm;
-            var searchField = form.searchField.value;
-
-            window.alert(searchField);
-            processResponse();
-        }
-    </script>
+    <script src="js/global_variables.js"></script>
+    <script src="js/site.js"></script>
+    <script src="js/gets.js"></script>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 
-<body>
+<body onload="main();">
     <form name="addForm" method="post">
         <span class="header">Video Mashup</span>
         <link rel="stylesheet" href="index.css">
-        <img src="Heineman.png"
-            onClick="JavaScript:updateAdminAccess(!isAdmin)">
+        <img src="images/Heineman.png" onClick="JavaScript:updateAdminAccess(!isAdmin)">
         <div class="row">
             <div name="playlistColumn" class="column">
                 <h2>Playlists</h2>
@@ -296,12 +25,9 @@
                         onClick="JavaScript:handleNewPlaylist()">
                 </div>
                 <br>
-
                 <div id="playlists"></div>
-
                 <br>
             </div>
-
             <div name="pad" class="columnPad"></div>
             <div name="videoColumn" class="column">
                 <h2>Videos</h2>
@@ -333,7 +59,8 @@
                 <div class="rowOdd">
                     <input name="searchField" value="" style="width:65%" />
 
-                    <input type="button" value="Register" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                    <input type="button" value="Register" style="width:30%"
+                        onClick="JavaScript:handleSearchClick(this)">
                 </div>
                 <br>
 
@@ -343,29 +70,6 @@
             </div>
         </div>
     </form>
-
-    <script>
-    var columns = [
-        document.getElementsByName('playlistColumn')[0],
-        document.getElementsByName('videoColumn')[0],
-        document.getElementsByName('siteColumn')[0]
-    ]
-    updateAdminAccess(false);
-    </script>
-
-    <script>
-        initialLoad();
-        /*if (isAdmin) {
-            window.alert("Hi there!");
-            addSites();
-            window.alert("Hi there!");
-        }*/
-    </script>
-
-    <script>
-        updateAdminSettings();
-    </script>
-
 </body>
 
 </html>
