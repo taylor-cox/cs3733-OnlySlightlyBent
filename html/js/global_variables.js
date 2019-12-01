@@ -10,3 +10,4 @@ var isAdmin = false;
 var videos = [];
 var playlists = [];
 var columns = [];
+var oldClassName = "";

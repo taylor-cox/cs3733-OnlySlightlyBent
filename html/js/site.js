@@ -2,40 +2,6 @@
 function makeList(isPlaylist, isSite, num) {
     loadVideos();
     loadPlaylists();
-    // var listHTML = '';
-    // var isEven = 1;
-    // var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
-    // for (var i = 0; i < num; i++) {
-    //     var videoURL = url + videos[i].fileName;
-    //     var videoQuote = videos[i].quote;
-    //     var videoCharacter = videos[i].character;
-    //     if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
-    //     else if (isEven) listHTML += '<div class="rowEven"';
-    //     else listHTML += '<div class="rowOdd"';
-    //     isEven = !isEven;
-    //     listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
-    //     listHTML += '>\n <span class="columnName" style="width:50%">';
-    //     if (isPlaylist) {
-    //         listHTML += playlists[i].id + '</span>\n';
-    //     } else {
-    //         listHTML += videoCharacter + ', "' + videoQuote + '"';
-    //         listHTML += '</span>\n';
-    //     }
-
-    //     if (!isPlaylist) {
-    //         listHTML += '<video width=300 height=200 controls>';
-    //         listHTML += '<source src=' + videoURL + ' type="video/ogg">';
-    //         listHTML += '</video>'
-    //     }
-    //     if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-    //     listHTML += ' <img src="images/trash_can.png" onClick="JavaScript:handleDelete'
-    //     listHTML += isPlaylist ? "Playlist" : "Video";
-    //     listHTML += '(';
-    //     listHTML += i;
-    //     listHTML += ')">\n';
-    //     listHTML += '</div>\n';
-    // }
-    // document.getElementById(isPlaylist ? "playlists" : "videos").innerHTML = listHTML;
 }
 
 function loadVideos() {
@@ -60,9 +26,12 @@ function loadVideos() {
         textSpan.style = "width:50%";
         textSpan.innerText = videoCharacter + ', "' + videoQuote + '"';
 
+        var deleteButton = document.createElement("BUTTON");
+        deleteButton.setAttribute("type", "button");
         var trashCanImage = document.createElement("IMG");
         trashCanImage.src = "images/trash_can.png";
-        trashCanImage.onclick = function () { handleDeleteVideo(x); };
+        deleteButton.onclick = function () { handleDeleteVideo(x); };
+        deleteButton.appendChild(trashCanImage);
 
         var video = document.createElement("VIDEO");
         video.width = "300"; video.height = "200";
@@ -76,7 +45,7 @@ function loadVideos() {
 
         newDiv.appendChild(textSpan);
         newDiv.appendChild(video);
-        newDiv.appendChild(trashCanImage);
+        newDiv.appendChild(deleteButton);
         videosElement.appendChild(newDiv);
     }
 }
@@ -98,11 +67,15 @@ function loadPlaylists() {
         textSpan.style = "width:50%";
         textSpan.innerText = playlists[i].id;
 
+        var deleteButton = document.createElement("BUTTON");
+        deleteButton.setAttribute("type", "button");
         var trashCanImage = document.createElement("IMG");
-        trashCanImage.src = "images/trash_can.png";
-        trashCanImage.onclick = function () { handleDeletePlaylist(x); };
+        trashCanImage.setAttribute("src", "images/trash_can.png");
+        deleteButton.onclick = function () { handleDeletePlaylist(x); };
+        deleteButton.appendChild(trashCanImage);
+
         newDiv.appendChild(textSpan);
-        newDiv.appendChild(trashCanImage);
+        newDiv.appendChild(deleteButton);
         playlistsElement.appendChild(newDiv);
     }
 }
@@ -174,6 +147,7 @@ function updateAdminSettings() {
 }
 
 function selectPlaylist(p) {
+    if(p == selectedVideo) return;
     var playlistElement = document.getElementById("playlists");
     playlistElement.childNodes[p].className = "rowSelected";
     if(selectedPlaylist >= 0) videoElement.childNodes[selectedPlaylist].className = "rowOdd";
@@ -181,15 +155,24 @@ function selectPlaylist(p) {
 }
 
 function selectVideo(v) {
+    if(v == selectedVideo) return;
     var videoElement = document.getElementById("videos");
+    if(selectedVideo >= 0 && selectedVideo != v) videoElement.childNodes[selectedVideo].className = oldClassName;
+    oldClassName = videoElement.childNodes[v].className;
     videoElement.childNodes[v].className = "rowSelected";
-    if(selectedVideo >= 0 && selectedVideo != v) videoElement.childNodes[selectedVideo].className = "rowOdd";
     selectedVideo = v;
 }
 
 function handleDeleteVideo(v) {
     var videoElement = document.getElementById("videos");
     videoElement.childNodes[v].style.display = "none";
+    videoElement.childNodes[v].className = oldClassName;
+    videoElement.childNodes.splice(v, 1);
+}
+
+function handleDeletePlaylist(p) {
+    var videoElement = document.getElementById("playlists");
+    videoElement.childNodes[p].style.display = "none";
     videoElement.childNodes.splice(v, 1);
 }
 
@@ -204,12 +187,6 @@ function handleNewVideo() {
         data["system"] = true;
     }
     var segments = document.createForm.base64Encoding.value.split(',');
-}
-
-function handleDeletePlaylist(p) {
-    var videoElement = document.getElementById("playlists");
-    videoElement.childNodes[p].style.display = "none";
-    videoElement.childNodes.splice(v, 1);
 }
 
 function handleNewPlaylist() {
