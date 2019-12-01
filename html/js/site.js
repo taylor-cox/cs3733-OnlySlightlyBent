@@ -1,8 +1,4 @@
 // Handles all front-end operations
-// function makeList(isPlaylist, isSite, num) {
-//     loadVideos();
-//     loadPlaylists();
-// }
 
 function loadVideos(fromPlaylist) {
     if(!fromPlaylist){
@@ -26,8 +22,10 @@ function addNewVideo(i) {
     var videoQuote = videos[i].quote;
     var videoCharacter = videos[i].character;
     var newDiv = document.createElement("DIV");
-    if (i % 2 == 0) newDiv.className = "rowEven";
-    else newDiv.className = "rowOdd";
+    // if (i % 2 == 0) newDiv.className = "rowEven";
+    // else newDiv.className = "rowOdd";
+
+    newDiv.className = "interiorRow";
 
     newDiv.id = i;
     let x = i;
@@ -45,6 +43,7 @@ function addNewVideo(i) {
 
     var deleteButton = document.createElement("BUTTON");
     deleteButton.setAttribute("type", "button");
+    deleteButton.setAttribute("style", "float: right");
     var trashCanImage = document.createElement("IMG");
     trashCanImage.setAttribute("src", "images/trash_can.png");
     deleteButton.onclick = function (event) {
@@ -56,6 +55,7 @@ function addNewVideo(i) {
 
     var addToPlaylistButton = document.createElement("BUTTON");
     addToPlaylistButton.setAttribute("type", "button");
+    addToPlaylistButton.setAttribute("style", "float: right");
     var addImage = document.createElement("IMG");
     addImage.setAttribute("src", "images/add.png")
     addToPlaylistButton.onclick = function () { addVideoToPlaylist(x); };
@@ -81,8 +81,10 @@ function addNewVideo(i) {
 function addNewPlaylist(i) {
     var playlistsElement = document.getElementById("playlists");
     var newDiv = document.createElement("DIV");
-    if (i % 2 == 0) newDiv.className = "rowEven";
-    else newDiv.className = "rowOdd";
+    // if (i % 2 == 0) newDiv.className = "rowEven";
+    // else newDiv.className = "rowOdd";
+
+    newDiv.className = "interiorRow";
 
     let x = i;
     newDiv.id = i;
@@ -97,6 +99,7 @@ function addNewPlaylist(i) {
 
     var deleteButton = document.createElement("BUTTON");
     deleteButton.setAttribute("type", "button");
+    deleteButton.setAttribute("style", "float: right");
     var trashCanImage = document.createElement("IMG");
     trashCanImage.setAttribute("src", "images/trash_can.png");
     deleteButton.onclick = function (event) {
@@ -108,6 +111,7 @@ function addNewPlaylist(i) {
 
     var viewButton = document.createElement("BUTTON");
     viewButton.setAttribute("type", "button");
+    viewButton.setAttribute("style", "float: right");
     var viewImage = document.createElement("IMG");
     viewImage.setAttribute("src", "images/view.png");
     viewButton.onclick = function(event) {
@@ -199,8 +203,7 @@ function updateAdminSettings() {
 function selectPlaylist(p) {
     if (p == selectedPlaylist) return;
     var playlistElement = document.getElementById("playlists");
-    if (selectedPlaylist >= 0 && selectedPlaylist != p) playlistElement.childNodes[selectedPlaylist].className = oldPlaylistClassName;
-    oldPlaylistClassName = playlistElement.childNodes[p].className;
+    if (selectedPlaylist >= 0 && selectedPlaylist != p) playlistElement.childNodes[selectedPlaylist].className = "interiorRow";
     playlistElement.childNodes[p].className = "rowSelected";
     selectedPlaylist = p;
 }
@@ -208,8 +211,7 @@ function selectPlaylist(p) {
 function selectVideo(v) {
     if (v == selectedVideo) return;
     var videoElement = document.getElementById("videos");
-    if (selectedVideo >= 0 && selectedVideo != v) videoElement.childNodes[selectedVideo].className = oldVideoClassName;
-    oldVideoClassName = videoElement.childNodes[v].className;
+    if (selectedVideo >= 0 && selectedVideo != v) videoElement.childNodes[selectedVideo].className = "interiorRow";
     videoElement.childNodes[v].className = "rowSelected";
     selectedVideo = v;
 }
@@ -217,7 +219,6 @@ function selectVideo(v) {
 function handleDeleteVideo(v) {
     var videoElement = document.getElementById("videos");
     videoElement.childNodes[v].style.display = "none";
-    videoElement.childNodes[v].className = oldVideoClassName;
     if(viewingPlaylist) {
         playlists[selectedPlaylist].entries.forEach(function(vid) {
             if(vid.id === v) {
@@ -227,13 +228,17 @@ function handleDeleteVideo(v) {
         playlists[selectedPlaylist].entries = playlists[selectedPlaylist].entries.filter(function(value) {
             return !(value === videos[v]);
         });
+    } else {
+        // videoElement.removeChild(videoElement.childNodes[v]);
     }
 }
 
 function handleDeletePlaylist(p) {
     var videoElement = document.getElementById("playlists");
     videoElement.childNodes[p].style.display = "none";
-    videoElement.childNodes.splice(v, 1);
+    // videoElement.removeChild(videoElement.childNodes[p]);
+    if(selectedPlaylist == p) selectedPlaylist = -1;
+    playlists.splice(p, 1);
 }
 
 function handleNewVideo() {
@@ -307,4 +312,8 @@ function main() {
     ]
 
     updateAdminAccess(false);
+    setTimeout(function() {
+        document.getElementById("adminButton").style.display = '';
+        if(window.scrollY == 0) window.scroll(0, 41);
+    }, 3000)
 }

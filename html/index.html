@@ -1,17 +1,19 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="css/index.css">
     <script src="js/global_variables.js"></script>
     <script src="js/site.js"></script>
     <script src="js/gets.js"></script>
-    <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body onload="main();">
     <form name="addForm" method="post">
-        <span class="header">Video Mashup</span>
-        <link rel="stylesheet" href="css/index.css">
-        <img src="images/Heineman.png" onClick="JavaScript:updateAdminAccess(!isAdmin)">
+        <img src="images/Heineman.png"
+        onClick="JavaScript:updateAdminAccess(!isAdmin)" style="display: none" id="adminButton">
+        <header>
+            <h1>Video Mashup</h1>
+        </header>
         <div class="row">
             <div name="playlistColumn" class="column">
                 <h2>Playlists</h2>

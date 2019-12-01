@@ -10,7 +10,5 @@ var isAdmin = false;
 var videos = [];
 var playlists = [];
 var columns = [];
-var oldVideoClassName = "";
-var oldPlaylistClassName = "";
 var playlistVideos = [];
 var viewingPlaylist = false;
