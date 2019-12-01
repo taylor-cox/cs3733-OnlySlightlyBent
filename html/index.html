@@ -34,9 +34,10 @@
             <div name="videoColumn" class="column">
                 <h2>Videos</h2>
                 <div class="rowEven">
-                    <input name="searchField" value="" style="width:65%" id="searchVideosField">
+                    <input name="searchField" value=""
+                    placeholder="Character Name or Quote" style="width:65%" id="searchVideosField">
 
-                    <input type="button" value="Search" style="width:34%" onClick="JavaScript:handleSearchClick(this)">
+                    <input type="button" value="Search" style="width:34%" onClick="JavaScript:handleSearchVideosClick()">
                 </div>
                 <br>
                 <div class="rowOdd">
@@ -53,13 +54,14 @@
             <div name="siteColumn" class="column">
                 <h2>Sites</h2>
                 <div class="rowEven">
-                    <input name="searchField" value="" style="width:65%" />
+                    <input name="searchField" value="" placeholder="Site URL" style="width:65%" id="searchSitesField">
 
-                    <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                    <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchSitesClick(this)">
                 </div>
                 <br>
                 <div class="rowOdd">
-                    <input name="searchField" value="" style="width:65%" />
+                    <input name="searchField" value=""
+                    placeholder="Site URL" style="width:65%" id="registerSiteField">
 
                     <input type="button" value="Register" style="width:30%"
                         onClick="JavaScript:handleSearchClick(this)">

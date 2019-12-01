@@ -18,6 +18,7 @@ function loadPlaylists() {
         addNewPlaylist(i);
     }
 }
+
 function addNewVideo(i) {
     var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
     var videosElement = document.getElementById("videos");
@@ -32,10 +33,15 @@ function addNewVideo(i) {
     let x = i;
     newDiv.onclick = function () { selectVideo(x); };
 
-    var textSpan = document.createElement("P");
-    textSpan.className = "columnName";
-    textSpan.style = "width:50%";
-    textSpan.innerText = videoCharacter + ', "' + videoQuote + '"';
+    var textParagraph = document.createElement("P");
+    textParagraph.className = "columnName";
+    textParagraph.style = "width:50%";
+    var character = document.createElement("B");
+    character.innerText = videoCharacter;
+    textParagraph.appendChild(character);
+    textParagraph.appendChild(document.createElement("BR"));
+    // textParagraph.appendChild(document.createElement("P").innerText = videoQuote)
+    textParagraph.innerHTML = character.outerHTML + document.createElement("BR").outerHTML + '"' + videoQuote + '"';
 
     var deleteButton = document.createElement("BUTTON");
     deleteButton.setAttribute("type", "button");
@@ -65,7 +71,7 @@ function addNewVideo(i) {
 
     video.appendChild(videoSource);
 
-    newDiv.appendChild(textSpan);
+    newDiv.appendChild(textParagraph);
     newDiv.appendChild(video);
     newDiv.appendChild(deleteButton);
     newDiv.appendChild(addToPlaylistButton);
@@ -269,8 +275,14 @@ function handleMyLibraryClick() {
     viewingPlaylist = false;
 }
 
-function handleSearchClick(e) {
+function handleSearchVideosClick() {
     var searchText = document.getElementById("searchVideosField").value;
+    window.alert(searchText);
+    processResponse();
+}
+
+function handleSearchSitesClick() {
+    var searchText = document.getElementById("searchSitesField").value;
     window.alert(searchText);
     processResponse();
 }
