@@ -10,7 +10,7 @@
 <body onload="main();">
     <form name="addForm" method="post">
         <span class="header">Video Mashup</span>
-        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="css/index.css">
         <img src="images/Heineman.png" onClick="JavaScript:updateAdminAccess(!isAdmin)">
         <div class="row">
             <div name="playlistColumn" class="column">
@@ -21,7 +21,9 @@
                 </div>
                 <br>
                 <div class="rowOdd">
-                    <input type="button" value="New Playlist" style="width:100%"
+                    <input type="searchField" placeholder="New Playlist Name"
+                    style="width:75%" id="newPlaylistNameField">
+                    <input type="button" value="New Playlist" style="width:24%"
                         onClick="JavaScript:handleNewPlaylist()">
                 </div>
                 <br>
@@ -32,9 +34,9 @@
             <div name="videoColumn" class="column">
                 <h2>Videos</h2>
                 <div class="rowEven">
-                    <input name="searchField" value="" style="width:65%" />
+                    <input name="searchField" value="" style="width:65%" id="searchVideosField">
 
-                    <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">
+                    <input type="button" value="Search" style="width:34%" onClick="JavaScript:handleSearchClick(this)">
                 </div>
                 <br>
                 <div class="rowOdd">

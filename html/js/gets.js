@@ -36,7 +36,7 @@ function fetchVideos() {
         } else {
             processListVideoResponse("N/A");
         }
-        loadVideos();
+        loadVideos(false);
     };
 }
 
@@ -70,7 +70,6 @@ function processListVideoResponse(result) {
     // returns the json.
     var js = JSON.parse(result);
     for (video in js.list) {
-        console.log(js.list[video]);
         videos[video] = js.list[video];
         videoNum++;
     }
@@ -81,9 +80,7 @@ function processListPlaylistResponse(result) {
     // Takes a json of all the playlists and puts it into playlists array, and
     // returns the json.
     var js = JSON.parse(result);
-    console.log(js.list)
     for (pl in js.list) {
-        console.log(js.list[pl]);
         playlists[pl] = js.list[pl];
         playlistNum++;
     }
