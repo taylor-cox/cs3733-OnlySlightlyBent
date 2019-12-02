@@ -23,7 +23,7 @@ public class ListPlaylistHandler implements RequestHandler<Object, AllPlaylistRe
 		/**
 		 * Get Library returns the available library, consisting of s3 segments we uploaded.
 		 */
-		VideosDAO dao = new VideosDAO();
+		VideosDAO dao = VideosDAO.videosDAO();
 		return dao.getPlaylists();
 	}
 	

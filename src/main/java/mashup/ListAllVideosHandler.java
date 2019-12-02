@@ -29,7 +29,7 @@ public class ListAllVideosHandler implements RequestHandler<Object, AllVideosRes
 		/**
 		 * Get Library returns the available library, consisting of s3 segments we uploaded.
 		 */
-		VideosDAO dao = new VideosDAO();
+		VideosDAO dao = VideosDAO.videosDAO();
 		return dao.getLibrary();
 	}
 	

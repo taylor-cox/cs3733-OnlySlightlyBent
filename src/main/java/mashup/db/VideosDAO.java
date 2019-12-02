@@ -20,14 +20,22 @@ import mashup.model.Video;
  */
 public class VideosDAO {
 
+	VideosDAO videosDAO;
 	java.sql.Connection conn;
 
-    public VideosDAO() {
+    VideosDAO() {
     	try  {
     		conn = DatabaseUtil.connect();
     	} catch (Exception e) {
     		conn = null;
     	}
+    }
+    
+    public static VideosDAO videosDAO() {
+    	if (videosDAO == null) {
+    		videosDAO = new VideosDAO();
+    	}
+    	return videosDAO;
     }
 
     public Video getVideo(String id) throws Exception {
