@@ -298,8 +298,9 @@ function handleMyLibraryClick() {
 
 function handleSearchVideosClick() {
     var searchText = document.getElementById("searchVideosField").value;
-
-    window.alert(searchText);
+    var re = new RegExp('"(.*?)"');
+    var searchElements = searchText.split(re);
+    console.log(searchElements);
     processResponse();
 }
 
