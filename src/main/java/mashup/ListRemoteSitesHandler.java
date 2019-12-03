@@ -26,7 +26,7 @@ public class ListRemoteSitesHandler implements RequestHandler<Object, AllSitesRe
 		/**
 		 * Get the created Library's registered sites
 		 */
-		VideosDAO dao = new VideosDAO();
+		VideosDAO dao = VideosDAO.videosDAO();
 		return dao.getRegisteredSites();
 	}
 	
