@@ -263,12 +263,6 @@ public class VideosDAO {
 			throw new Exception("Failed in getting books: " + e.getMessage());
 		}
 	}
-
-	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
-		String video = resultSet.getString("video");
-		String order = resultSet.getString("order");
-		return new PlaylistEntry(video, Integer.parseInt(order));
-	}
     
     public Playlist addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
@@ -277,11 +271,6 @@ public class VideosDAO {
         	String query = "INSERT INTO playlist (playlistID, playlistName) VALUES (";
         	query = query + p.getId() + ", " + p.getName() + ")";
         	ResultSet playlistsResp = statement.executeQuery(query);
-	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
-		String video = resultSet.getString("video");
-		String order = resultSet.getString("order");
-		return new PlaylistEntry(video, Integer.parseInt(order));
-	}
 
         } catch (Exception e) {
             throw new Exception("Failed adding playlist: " + e.getMessage());
@@ -289,6 +278,12 @@ public class VideosDAO {
     	
     	return p;
     }
+
+	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
+		String video = resultSet.getString("video");
+		String order = resultSet.getString("order");
+		return new PlaylistEntry(video, Integer.parseInt(order));
+	}
     
     private Video generateVideo(ResultSet resultSet) throws Exception {
     	String character  = resultSet.getString("Character");
