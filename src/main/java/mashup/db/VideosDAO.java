@@ -20,7 +20,7 @@ import mashup.model.Video;
  */
 public class VideosDAO {
 
-	VideosDAO videosDAO;
+	static VideosDAO videosDAO;
 	java.sql.Connection conn;
 
     VideosDAO() {
@@ -196,6 +196,20 @@ public class VideosDAO {
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
         }
+    }
+    
+    public Playlist addPlaylist(Playlist p) throws Exception {
+    	// Sets up the querys which we will be using to parse the databases
+        try {
+        	Statement statement = conn.createStatement();
+        	String query = "INSERT INTO playlist (playlistID, playlistName) VALUES (";
+        	query = query + p.getId() + ", " + p.getName() + ")";
+        	ResultSet playlistsResp = statement.executeQuery(query);
+        } catch (Exception e) {
+            throw new Exception("Failed adding playlist: " + e.getMessage());
+        }
+    	
+    	return p;
     }
     
     private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {

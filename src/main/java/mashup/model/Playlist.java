@@ -11,6 +11,14 @@ public class Playlist {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public List<PlaylistEntry> getEntries() {
 		return entries;
@@ -21,6 +29,7 @@ public class Playlist {
 	}
 
 	String id;
+	String name;
 	List<PlaylistEntry> entries = new ArrayList<PlaylistEntry>();
 	
 	@Override
