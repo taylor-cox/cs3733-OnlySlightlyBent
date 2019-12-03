@@ -8,36 +8,22 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import mashup.MarkLocalVideoSegmentHandler;
+import mashup.http.MarkLocalVideoSegRequest;
+import mashup.http.MarkLocalVideoSegResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class MarkLocalVideoSegmentHandlerTest {
-
-    private static Object input;
-
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
-
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
+public class MarkLocalVideoSegmentHandlerTest extends LambdaTest {
 
     @Test
     public void testMarkLocalVideoSegmentHandler() {
         MarkLocalVideoSegmentHandler handler = new MarkLocalVideoSegmentHandler();
-        Context ctx = createContext();
+        MarkLocalVideoSegRequest input = new MarkLocalVideoSegRequest("1");
+        Context ctx = createContext("mark");
 
-        String output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        MarkLocalVideoSegResponse output = handler.handleRequest(input, ctx);
+        System.out.println(output.httpCode + ", " + output.response);
     }
 }
