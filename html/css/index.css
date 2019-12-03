@@ -52,7 +52,7 @@
 	clear: both;
 }
 
-.rowEven {
+/* .rowEven {
 	padding: 1%;
 	background-color: #ccc;
 	font: 1em "Comic Sans MS", cursive, sans-seriff;
@@ -62,16 +62,25 @@
 	padding: 1%;
 	background-color: #eee;
 	font: 1em "Comic Sans MS", cursive, sans-seriff;
-}
+} */
 
 .rowSelected {
 	padding: 1%;
-	background-color: #6633ff;
+	background-color: #7794fc;
 	font: 1em "Comic Sans MS", cursive, sans-seriff;
+	border-style: solid;
+	border-width: 1px;
 }
 
-.header {
+.interiorRow {
+	padding: 1%;
+	border-style: solid;
+	border-width: 1px;
+}
+
+header {
 	font: 1em "Comic Sans MS", cursive, sans-seriff;
+	text-align: center;
 }
 
 img {
