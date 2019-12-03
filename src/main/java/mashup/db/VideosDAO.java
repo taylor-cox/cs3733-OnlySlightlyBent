@@ -231,8 +231,9 @@ public class VideosDAO {
 			// Sets up the character, quote, ID for the videos in library
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
+				String name = playlistsResp.getString("name");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id);
+				if(pl == null) pl = new Playlist(id, name);
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
