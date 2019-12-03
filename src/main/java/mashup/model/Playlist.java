@@ -38,8 +38,9 @@ public class Playlist {
 	}
 
 	public Playlist() {}
-	public Playlist(String id) {
+	public Playlist(String id, String name) {
 		this.id = id;
+		this.name = name;
 	}
 	
 	public void addPlaylistEntry(PlaylistEntry pe) {
