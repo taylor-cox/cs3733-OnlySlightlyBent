@@ -277,6 +277,12 @@ public class VideosDAO {
         	String query = "INSERT INTO playlist (playlistID, playlistName) VALUES (";
         	query = query + p.getId() + ", " + p.getName() + ")";
         	ResultSet playlistsResp = statement.executeQuery(query);
+	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
+		String video = resultSet.getString("video");
+		String order = resultSet.getString("order");
+		return new PlaylistEntry(video, Integer.parseInt(order));
+	}
+
         } catch (Exception e) {
             throw new Exception("Failed adding playlist: " + e.getMessage());
         }
