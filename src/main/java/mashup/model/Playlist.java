@@ -34,7 +34,7 @@ public class Playlist {
 	
 	@Override
 	public String toString() {
-		return "Playlist [id=" + id + ", entries=" + entries + "]";
+		return "Playlist [id=" + id + ", name=" + name + ", entries=" + entries + "]";
 	}
 
 	public Playlist() {}

@@ -2,18 +2,28 @@ package mashup.http;
 
 public class CreatePlaylistRequest {
 	String playlistID;
+	String playlistName;
 	
-	public CreatePlaylistRequest(String playlistID) {
+	public CreatePlaylistRequest(String playlistID, String playlistName) {
 		this.playlistID = playlistID;
+		this.playlistName = playlistName;
 	}
 	
 	public CreatePlaylistRequest() {}
 	
-	public String getVideoID() {
+	public String getPlaylistID() {
 		return playlistID;
 	}
 
-	public void setVideoID(String playlistID) {
+	public void setPlaylistID(String playlistID) {
 		this.playlistID = playlistID;
+	}
+	
+	public String getPlaylistName() {
+		return playlistName;
+	}
+
+	public void setPlaylistName(String playlistName) {
+		this.playlistName = playlistName;
 	}
 }
