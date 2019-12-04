@@ -243,7 +243,7 @@ public class VideosDAO {
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id, "N/A");
+				if(pl == null) pl = new Playlist(id, id);
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
@@ -253,14 +253,6 @@ public class VideosDAO {
 					pl.addPlaylistEntry(toAdd);
 				}
 			}
-
-			query = "SELECT * FROM videos WHERE ID IN (";
-
-			for(String ID : videos.values())
-				query += "'" + ID  + "', ";
-
-			query += ")";
-
 
 			// REMEMBER TO CLOSE ALL CONNECTIONS!
 			playlistsResp.close();
@@ -287,19 +279,6 @@ public class VideosDAO {
             throw new Exception("Failed adding playlist: " + e.getMessage());
         }
     }
-
-	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
-		String video = resultSet.getString("video");
-		String order = resultSet.getString("order");
-		return new PlaylistEntry(video, Integer.parseInt(order));
-	}
-    
-    private Video generateVideo(ResultSet resultSet) throws Exception {
-    	String character  = resultSet.getString("Character");
-        String quote = resultSet.getString("Quote");
-        String ID = resultSet.getString("ID");
-        return new Video(ID, character, quote, "");
-    }
     
     public List<Site> getRegisteredSites() throws Exception {
     	List<Site> output = new ArrayList<Site>();
@@ -310,17 +289,33 @@ public class VideosDAO {
             ResultSet registeredSiteResp = statement.executeQuery(query);
             
             // Sets up the character, quote, ID for the videos in library
-            while(registeredSiteResp.next()) {
-            	String id = registeredSiteResp.getString("id");
-            	String url = registeredSiteResp.getString("url");
-            	output.add(new Site(id, url));
-            	
-            }
+            while(registeredSiteResp.next()) 
+            	output.add(generateSite(registeredSiteResp));
             return output;
-
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
         }
     }
 
+	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
+		String video = resultSet.getString("video");
+		String order = resultSet.getString("order");
+		return new PlaylistEntry(video, Integer.parseInt(order));
+	}
+
+	private Video generateVideo(ResultSet resultSet) throws Exception {
+		String character  = resultSet.getString("Character");
+		String quote = resultSet.getString("Quote");
+		String ID = resultSet.getString("ID");
+		return new Video(ID, character, quote, "");
+	}
+	
+	private Site generateSite(ResultSet resultSet) throws Exception {
+    	String id = resultSet.getString("id");
+    	String url = resultSet.getString("url");
+    	return new Site(id, url);
+	}
+
 }
+
+//did you know jeb bush is the zodiac killer??
