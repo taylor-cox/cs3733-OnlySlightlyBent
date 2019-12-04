@@ -272,12 +272,11 @@ public class VideosDAO {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	System.out.print("INSERT INTO playlistnames VALUES (" + p.getId() + ", " + p.getName() + ");");
-        	String query = "INSERT INTO playlistnames VALUES (";
-        	System.out.print(query + p.getId() + ", " + p.getName() + ");");
-        	query = query + p.getId() + ", " + p.getName() + ");";
-        	System.out.print(query);
-        	boolean playlistsResp = statement.execute(query);
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES ('?', '?');");
+        	ps.setString(1, p.getId());
+        	ps.setString(2, p.getName());
+        	
+        	int playlistsResp = ps.executeUpdate();
         	return true;
         } catch (Exception e) {
             throw new Exception("Failed adding playlist: " + e.getMessage());
