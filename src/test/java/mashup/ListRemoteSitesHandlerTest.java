@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import mashup.http.AllSitesResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
@@ -34,10 +36,9 @@ public class ListRemoteSitesHandlerTest {
     public void testListRemoteSitesHandler() {
         ListRemoteSitesHandler handler = new ListRemoteSitesHandler();
         Context ctx = createContext();
-
 //        String output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
+        AllSitesResponse output = handler.handleRequest(input, ctx);
 //        Assert.assertEquals("Hello from Lambda!", output);
+        Assert.assertEquals("Hello from Lambda!", output.toString());
     }
 }
