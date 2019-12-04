@@ -291,25 +291,7 @@ public class VideosDAO {
 		}
 	}
 	
-	
-    
-    public boolean addPlaylist(Playlist p) throws Exception {
-    	// Sets up the querys which we will be using to parse the databases
-        try {
-        	Statement statement = conn.createStatement();
-        	System.out.print("INSERT INTO playlistnames VALUES (" + p.getId() + ", " + p.getName() + ");");
-        	String query = "INSERT INTO playlistnames VALUES (";
-        	System.out.print(query + p.getId() + ", " + p.getName() + ");");
-        	query = query + p.getId() + ", " + p.getName() + ");";
-        	System.out.print(query);
-        	boolean playlistsResp = statement.execute(query);
-        	return true;
-        } catch (Exception e) {
-            throw new Exception("Failed adding playlist: " + e.getMessage());
-        }
-    }
-    
-    public List<Site> getRegisteredSites() throws Exception {
+
     
     public boolean addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
