@@ -272,7 +272,7 @@ public class VideosDAO {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES ('?', '?');");
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?, ?);");
         	ps.setString(1, p.getId());
         	ps.setString(2, p.getName());
         	
