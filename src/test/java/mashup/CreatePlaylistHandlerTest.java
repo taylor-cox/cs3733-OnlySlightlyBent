@@ -42,11 +42,13 @@ public class CreatePlaylistHandlerTest {
 
         
         String output = handler.handleRequest(input, ctx);
-
+        Playlist p = new Playlist("123456789", "Fav Star Trek Vids");
         List<Playlist> playlists = null;
 		try {
 			playlists = VideosDAO.videosDAO().getPlaylists();
-	        Assert.assertEquals(playlists.get(playlists.size()-1).toString(), new Playlist("123456789", "Fav Star Trek Vids").toString());
+			System.out.print(playlists.get(playlists.size()-1).toString());
+	        VideosDAO.videosDAO().deletePlaylist(p);
+	        Assert.assertEquals(playlists.get(playlists.size()-1).toString(), p.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
