@@ -62,7 +62,7 @@ function addNewVideo(i) {
     addToPlaylistButton.appendChild(addImage);
 
     var video = document.createElement("VIDEO");
-    video.width = "300"; video.height = "200";
+    video.width = "250"; video.height = "150";
     video.controls = true;
 
     var videoSource = document.createElement("SOURCE");
@@ -129,9 +129,25 @@ function addNewPlaylist(i) {
 
 function showPlaylistVideos() {
     var videosElement = document.getElementById("videos").childNodes;
+    hideAllVideos();
     videosElement.forEach(function(vid) {
-        if(!(playlistVideos.includes(videos[vid.id]))) vid.style.display = "none";
+        if(playlistVideos.includes(videos[vid.id])) show(vid);
     });
+}
+
+function hideAllVideos() {
+    var videosElement = document.getElementById("videos").childNodes;
+    videosElement.forEach(function(vid) {
+        hide(vid);
+    });
+}
+
+function hide(element) {
+    element.style.display = "none";
+}
+
+function show(element) {
+    element.style.display = "";
 }
 
 /*function addSites() {
@@ -196,8 +212,8 @@ function updateAdminSettings() {
         pads[n].className = isAdmin ? "columnAdminPad" : "columnPad";
     }
     var siteColumn = document.getElementsByName("siteColumn")[0];
-    if (siteColumn.style.display === "") siteColumn.style.display = "none";
-    else siteColumn.style.display = "";
+    if (!isAdmin) hide(siteColumn);
+    else show(siteColumn);
 }
 
 function selectPlaylist(p) {
@@ -218,11 +234,11 @@ function selectVideo(v) {
 
 function handleDeleteVideo(v) {
     var videoElement = document.getElementById("videos");
-    videoElement.childNodes[v].style.display = "none";
+    hide(videoElement.childNodes[v]);
     if(viewingPlaylist) {
         playlists[selectedPlaylist].entries.forEach(function(vid) {
             if(vid.id === v) {
-                vid.style.display = "none";
+                hide(vid);
             }
         });
         playlists[selectedPlaylist].entries = playlists[selectedPlaylist].entries.filter(function(value) {
@@ -235,7 +251,7 @@ function handleDeleteVideo(v) {
 
 function handleDeletePlaylist(p) {
     var videoElement = document.getElementById("playlists");
-    videoElement.childNodes[p].style.display = "none";
+    hide(videoElement.childNodes[p]);
     // videoElement.removeChild(videoElement.childNodes[p]);
     if(selectedPlaylist == p) selectedPlaylist = -1;
     playlists.splice(p, 1);
@@ -275,14 +291,16 @@ function handleViewPlaylist(i) {
 function handleMyLibraryClick() {
     var videosElement = document.getElementById("videos").childNodes;
     videosElement.forEach(function(vid) {
-        vid.style.display = "";
+        show(vid);
     });
     viewingPlaylist = false;
 }
 
 function handleSearchVideosClick() {
     var searchText = document.getElementById("searchVideosField").value;
-    window.alert(searchText);
+    var re = new RegExp('"(.*?)"');
+    var searchElements = searchText.split(re);
+    console.log(searchElements);
     processResponse();
 }
 
@@ -313,7 +331,7 @@ function main() {
 
     updateAdminAccess(false);
     setTimeout(function() {
-        document.getElementById("adminButton").style.display = '';
+        show(document.getElementById("adminButton"));
         if(window.scrollY == 0) window.scroll(0, 41);
     }, 3000)
 }

@@ -3,14 +3,32 @@ package mashup;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class AppendVideoHandler implements RequestHandler<Object, String> {
+import mashup.db.VideosDAO;
+import mashup.http.AppendVideoRequest;
+import mashup.http.AppendVideoResponse;
+
+public class AppendVideoHandler implements RequestHandler<AppendVideoRequest, AppendVideoResponse> {
+	
+	public boolean appendVideo(String videoID, String playlistID) throws Exception {
+		VideosDAO dao = VideosDAO.videosDAO();
+		return dao.appendVideoToPlaylist(videoID, playlistID);
+	}
 
     @Override
-    public String handleRequest(Object input, Context context) {
-        context.getLogger().log("Input: " + input);
+    public AppendVideoResponse handleRequest(AppendVideoRequest input, Context context) {
+        AppendVideoResponse response;
 
-        // TODO: implement your handler
-        return "Hello from Lambda!";
+        try {
+			if(appendVideo(input.getVideoID(), input.getPlaylistID()))
+				response = new AppendVideoResponse(200);
+			else
+				response = new AppendVideoResponse(403, "Video already in playlist");
+		} catch (Exception e) {
+			response = new AppendVideoResponse(403, "Video could not be appended");
+			e.printStackTrace();
+		}
+        
+        return response;
     }
 
 }

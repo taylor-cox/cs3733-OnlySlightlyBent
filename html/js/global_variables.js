@@ -8,6 +8,7 @@ var selectedPlaylist = -1;
 var selectedVideo = -1;
 var isAdmin = false;
 var videos = [];
+var searchVideos = [];
 var playlists = [];
 var columns = [];
 var playlistVideos = [];

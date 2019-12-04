@@ -7,7 +7,8 @@ public class UnmarkLocalVideoSegRequest {
 		this.videoID = videoID;
 	}
 	
-	public UnmarkLocalVideoSegRequest() {}
+	public UnmarkLocalVideoSegRequest() {
+	}
 	
 	public String getVideoID() {
 		return videoID;
