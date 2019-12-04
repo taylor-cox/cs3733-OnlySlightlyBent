@@ -283,12 +283,12 @@ public class VideosDAO {
         }
     }
     
-    public boolean deletePlaylist(Playlist p) throws Exception {
+    public boolean deletePlaylist(String p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
         	PreparedStatement ps = conn.prepareStatement("DELETE FROM playlistnames WHERE id = ? LIMIT 1;");
-        	ps.setString(1, p.getId());
+        	ps.setString(1, p);
         	
         	int playlistsResp = ps.executeUpdate();
         	return true;

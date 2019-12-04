@@ -40,14 +40,21 @@ public class CreatePlaylistHandlerTest {
         CreatePlaylistHandler handler = new CreatePlaylistHandler();
         Context ctx = createContext();
 
-        
-        String output = handler.handleRequest(input, ctx);
-        Playlist p = new Playlist("123456789", "Fav Star Trek Vids");
-        List<Playlist> playlists = null;
 		try {
+	        List<Playlist> playlists = null;
 			playlists = VideosDAO.videosDAO().getPlaylists();
-			System.out.print(playlists.get(playlists.size()-1).toString());
-	        VideosDAO.videosDAO().deletePlaylist(p);
+			for (int i = 0; i < playlists.size(); i++) {
+				System.out.print(playlists.get(i).toString() + "\n");
+			}
+			
+	        String output = handler.handleRequest(input, ctx);
+	        Playlist p = new Playlist("123456789", "Fav Star Trek Vids");
+	        
+			playlists = VideosDAO.videosDAO().getPlaylists();
+			for (int i = 0; i < playlists.size(); i++) {
+				System.out.print(playlists.get(i).toString() + "\n");
+			}
+	        VideosDAO.videosDAO().deletePlaylist(p.getId());
 	        Assert.assertEquals(playlists.get(playlists.size()-1).toString(), p.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
