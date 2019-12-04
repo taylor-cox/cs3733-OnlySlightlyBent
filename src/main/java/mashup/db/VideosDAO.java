@@ -9,6 +9,7 @@ import java.util.List;
 import mashup.model.Library;
 import mashup.model.Playlist;
 import mashup.model.PlaylistEntry;
+import mashup.model.Site;
 import mashup.model.Video;
 
 /**
@@ -232,7 +233,7 @@ public class VideosDAO {
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id);
+//				if(pl == null) pl = new Playlist(id);
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
@@ -247,8 +248,8 @@ public class VideosDAO {
 
 			for(String ID : videos.values())
 				query += "'" + ID  + "', ";
-
 			query += ")";
+
 
 
 			// REMEMBER TO CLOSE ALL CONNECTIONS!
@@ -276,5 +277,27 @@ public class VideosDAO {
 		String ID = resultSet.getString("ID");
 		return new Video(ID, character, quote, "");
 	}
+	
+	public List<Site> getRegisteredSites() throws Exception {
+    	List<Site> output = new ArrayList<Site>();
+        try {
+        	// Sets up the querys which we will be using to parse the databases
+            Statement statement = conn.createStatement();
+            String query = "SELECT * FROM `registered-sites`";
+            ResultSet registeredSiteResp = statement.executeQuery(query);
+            
+            // Sets up the character, quote, ID for the videos in library
+            while(registeredSiteResp.next()) {
+            	String id = registeredSiteResp.getString("id");
+            	String url = registeredSiteResp.getString("url");
+            	output.add(new Site(id, url));
+            	
+            }
+            return output;
+
+        } catch (Exception e) {
+            throw new Exception("Failed in getting books: " + e.getMessage());
+        }
+    }
 
 }
