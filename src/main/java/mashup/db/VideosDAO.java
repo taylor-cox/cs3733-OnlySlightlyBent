@@ -41,7 +41,7 @@ public class VideosDAO {
 	
 	public boolean unmarkVideo(String videoID) throws Exception {
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='n' WHERE id = '?'");
+			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='n' WHERE id = ?;");
 			ps.setString(1, videoID);
 			int result = ps.executeUpdate();
 			if(result == 0) return false;
@@ -53,7 +53,7 @@ public class VideosDAO {
 
 	public boolean markVideo(String videoID) throws Exception {
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='y' WHERE id = '?'");
+			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='y' WHERE id = ?;");
 			ps.setString(1, videoID);
 			int result = ps.executeUpdate();
 			if(result == 0) return false;
@@ -65,8 +65,8 @@ public class VideosDAO {
 
 	public boolean appendVideoToPlaylist(String videoID, String playlistID) throws Exception {
 		try {
-			// Sets up the querys which we will be using to parse the databases
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE id='?'");
+			// Sets up the queries which we will be using to parse the databases
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE id=?;");
 			ps.setString(1,  playlistID);
 			ResultSet videos = ps.executeQuery();
 			int maxOrder = 0;
@@ -76,10 +76,10 @@ public class VideosDAO {
 				else if(order > maxOrder) maxOrder = order;
 			}
 			maxOrder++;
-			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `playlist` VALUES('?', '?', '?')");
-			ps.setString(1, playlistID);
-			ps.setString(2, videoID);
-			ps.setString(3, Integer.toString(maxOrder));
+			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `playlist` VALUES(?, ?, ?);");
+			ps2.setString(1, playlistID);
+			ps2.setString(2, videoID);
+			ps2.setString(3, Integer.toString(maxOrder));
 			if(ps2.executeUpdate() == 0) return false;
 			return true;
 		} catch (Exception e) {
@@ -90,12 +90,12 @@ public class VideosDAO {
 	public boolean removeVideoFromPlaylist(String videoID, String playlistID) throws Exception {
 		try {
 			// Sets up the querys which we will be using to parse the databases
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE video='?' AND id='?'");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE video='?' AND id='?';");
 			ps.setString(1, videoID);
 			ps.setString(2, playlistID);
 			ResultSet videos = ps.executeQuery();
 			if(videos.next()) {
-				PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `playlist` WHERE video='?' AND id='?'");
+				PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `playlist` WHERE video='?' AND id='?';");
 				ps2.setString(1, videoID);
 				ps2.setString(2, playlistID);
 				if(ps2.executeUpdate() == 0) return false;
@@ -113,9 +113,9 @@ public class VideosDAO {
 			// Sets up the querys which we will be using to parse the databases
 			Statement statement = conn.createStatement();
 			Statement statement2 = conn.createStatement();
-			String query = "SELECT * FROM videos";
+			String query = "SELECT * FROM videos;";
 			ResultSet videos = statement.executeQuery(query);
-			query = "SELECT * FROM library";
+			query = "SELECT * FROM library;";
 			ResultSet library = statement2.executeQuery(query);
 
 			// Sets up the character, quote, ID for the videos in library
