@@ -199,19 +199,13 @@ public class VideosDAO {
 	public boolean registerRemoteSite(String url) throws Exception {
 		try {
 			// Sets up the queries which we will be using to parse the databases
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `registered-sites` WHERE id=?;");
-			ps.setString(1, url);
-			ResultSet sites = ps.executeQuery();
-			int maxOrder = 0;
-			while(sites.next()) {
-				int order = Integer.parseInt(sites.getString("order"));
-				if(sites.getString("site") == url) return false;
-				else if(order > maxOrder) maxOrder = order;
-			}
-			maxOrder++;
-			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO 'registered-sites' VALUES(?,;");
+//			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `registered-sites` WHERE `url`=?");
+//			ps.setString(1, url);
+//			ResultSet sites = ps.executeQuery();
+//			if(!sites.next()) return false;
+			
+			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `registered-sites` VALUES (?)");
 			ps2.setString(1, url);
-			ps2.setString(2, Integer.toString(maxOrder));
 			if(ps2.executeUpdate() == 0) return false;
 			return true;
 		} catch (Exception e) {
