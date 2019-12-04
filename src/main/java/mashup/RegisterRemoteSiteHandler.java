@@ -22,9 +22,9 @@ public class RegisterRemoteSiteHandler implements RequestHandler<RegisterSiteReq
 			if(registerSite(input.getUrl()))
 				response = new RegisterSiteResponse(200);
 			else
-				response = new RegisterSiteResponse(403, "Site is already registered.");
+				response = new RegisterSiteResponse(401, "Site is already registered.");
 		} catch (Exception e) {
-			response = new RegisterSiteResponse(403, "Site could not be registered.");
+			response = new RegisterSiteResponse(402, "Site could not be registered.");
 			e.printStackTrace();
 		}
         
