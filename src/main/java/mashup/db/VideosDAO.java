@@ -39,85 +39,6 @@ public class VideosDAO {
 		}
 		return videosDAO;
 	}
-
-	public Video getVideo(String id) throws Exception {
-		//        try {
-		//            Video video = null;
-		//            PreparedStatement ps = conn.prepareStatement("SELECT * FROM constants WHERE name=?;");
-		//            ps.setString(1,  name);
-		//            ResultSet resultSet = ps.executeQuery();
-		//            
-		//            while (resultSet.next()) {
-		//                constant = generateConstant(resultSet);
-		//            }
-		//            resultSet.close();
-		//            ps.close();
-		//            
-		//            return constant;
-		//
-		//        } catch (Exception e) {
-		//        	e.printStackTrace();
-		//            throw new Exception("Failed in getting constant: " + e.getMessage());
-		//        }
-		return null;
-	}
-
-	public boolean updateVideo(Video video) throws Exception {
-		//        try {
-		//        	String query = "UPDATE constants SET value=? WHERE name=?;";
-		//        	PreparedStatement ps = conn.prepareStatement(query);
-		//            ps.setDouble(1, constant.value);
-		//            ps.setString(2, constant.name);
-		//            int numAffected = ps.executeUpdate();
-		//            ps.close();
-		//            
-		//            return (numAffected == 1);
-		//        } catch (Exception e) {
-		//            throw new Exception("Failed to update report: " + e.getMessage());
-		//        }
-		return false;
-	}
-
-	public boolean deleteVideo(Video video) throws Exception {
-		//        try {
-		//            PreparedStatement ps = conn.prepareStatement("DELETE FROM constants WHERE name = ?;");
-		//            ps.setString(1, constant.name);
-		//            int numAffected = ps.executeUpdate();
-		//            ps.close();
-		//            
-		//            return (numAffected == 1);
-		//
-		//        } catch (Exception e) {
-		//            throw new Exception("Failed to insert constant: " + e.getMessage());
-		//        }
-		return false;
-	}
-
-
-	public boolean addVideo(Video video) throws Exception {
-		//        try {
-		//            PreparedStatement ps = conn.prepareStatement("SELECT * FROM constants WHERE name = ?;");
-		//            ps.setString(1, constant.name);
-		//            ResultSet resultSet = ps.executeQuery();
-		//            
-		//            // already present?
-		//            while (resultSet.next()) {
-		//                Constant c = generateConstant(resultSet);
-		//                resultSet.close();
-		//                return false;
-		//            }
-		//
-		//            ps = conn.prepareStatement("INSERT INTO constants (name,value) values(?,?);");
-		//            ps.setString(1,  constant.name);
-		//            ps.setDouble(2,  constant.value);
-		//            ps.execute();
-		//            return true;
-		//
-		//        } catch (Exception e) {
-		//            throw new Exception("Failed to insert constant: " + e.getMessage());
-		//        }
-		return false;
-	}
 	
 	public boolean unmarkVideo(String videoID) throws Exception {
 		try {
@@ -143,22 +64,25 @@ public class VideosDAO {
 		}
 	}
 
-	public boolean appendVideoToPlaylist(String videoID, String playlistID) throws Exception {
+		public boolean appendVideoToPlaylist(String videoID, String playlistID) throws Exception {
 		try {
-			// Sets up the querys which we will be using to parse the databases
-			Statement statement = conn.createStatement();
-			Statement statement2 = conn.createStatement();
-			String query1 = "SELECT * FROM `playlist` WHERE id=\"" + playlistID + "\"";
-			ResultSet videos = statement.executeQuery(query1);
+			// Sets up the queries which we will be using to parse the databases
+															 
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE id=?;");
+			ps.setString(1,  playlistID);
+			ResultSet videos = ps.executeQuery();
 			int maxOrder = 0;
 			while(videos.next()) {
 				int order = Integer.parseInt(videos.getString("order"));
 				if(videos.getString("video") == videoID) return false;
 				else if(order > maxOrder) maxOrder = order;
 			}
-
-			String query2 = "INSERT INTO `playlist` VALUES(\"" + playlistID + "\", \"" + videoID + "\", " + ++maxOrder + ")";
-			statement2.executeUpdate(query2);
+			maxOrder++;
+			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `playlist` VALUES(?, ?, ?);");
+			ps2.setString(1, playlistID);
+			ps2.setString(2, videoID);
+			ps2.setString(3, Integer.toString(maxOrder));
+			if(ps2.executeUpdate() == 0) return false;
 
 			return true;
 		} catch (Exception e) {
@@ -169,13 +93,17 @@ public class VideosDAO {
 	public boolean removeVideoFromPlaylist(String videoID, String playlistID) throws Exception {
 		try {
 			// Sets up the querys which we will be using to parse the databases
-			Statement statement = conn.createStatement();
-			Statement statement2 = conn.createStatement();
-			String query1 = "SELECT * FROM `playlist` WHERE video='" + videoID + "' AND id='" + playlistID + "'";
-			ResultSet videos = statement.executeQuery(query1);
+												
+												 
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE video='?' AND id='?';");
+			ps.setString(1, videoID);
+			ps.setString(2, playlistID);
+			ResultSet videos = ps.executeQuery();
 			if(videos.next()) {
-				String query2 = "DELETE FROM `playlist` WHERE video='" + videoID + "' AND id='" + playlistID + "'";
-				statement2.executeUpdate(query2);
+				PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `playlist` WHERE video='?' AND id='?';");
+				ps2.setString(1, videoID);
+				ps2.setString(2, playlistID);
+				if(ps2.executeUpdate() == 0) return false;
 				return true;
 			}
 
@@ -194,9 +122,9 @@ public class VideosDAO {
 			// Sets up the querys which we will be using to parse the databases
 			Statement statement = conn.createStatement();
 			Statement statement2 = conn.createStatement();
-			String query = "SELECT * FROM videos";
+			String query = "SELECT * FROM videos;";
 			ResultSet videos = statement.executeQuery(query);
-			query = "SELECT * FROM library";
+			query = "SELECT * FROM library;";
 			ResultSet library = statement2.executeQuery(query);
 
 			// Sets up the character, quote, ID for the videos in library
@@ -346,5 +274,3 @@ public class VideosDAO {
 	}
 
 }
-
-//did you know jeb bush is the zodiac killer??
