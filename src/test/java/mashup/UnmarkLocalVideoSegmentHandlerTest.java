@@ -23,8 +23,5 @@ public class UnmarkLocalVideoSegmentHandlerTest extends LambdaTest {
         Context ctx = createContext("mark");
 
         UnmarkLocalVideoSegResponse output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
     }
 }

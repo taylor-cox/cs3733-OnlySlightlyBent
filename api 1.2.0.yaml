@@ -1,0 +1,435 @@
+swagger: '2.0'
+info:
+  version: "1.2.0"
+  title: OnlySlightlyBentAPI
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: This API interfaces with OnlySlighlyBent's VideoMashupCreator
+  contact:
+    email: you@your-company.com
+host: virtserver.swaggerhub.com
+basePath: /OnlySli1/VideoMashupPlayer/1.0.0
+schemes:
+ - https
+
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: participants
+  description: People creating video mashups.
+
+paths:
+  /uploadVideo:
+    post:
+      tags:
+      - participants
+      summary: requests a video to be uploaded to the system
+      description: Requests a video to be uploaded to the system
+      operationId: uploadVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: UploadVideoRequest
+        description: Upload video to system
+        required: true
+        schema:
+         $ref: '#/definitions/UploadVideoRequest'
+      responses:
+        200:
+          description: video uploaded to the system
+        401:
+          description: video not available
+        402:
+          description: system error
+  /deleteVideo:
+    post:
+      tags:
+      - participants
+      summary: requests a video to be deleted from the system
+      description: Requests a video to be deleted from the system
+      operationId: deleteVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: DeleteVideoRequest
+        description: Delete video from the system
+        required: true
+        schema:
+         $ref: '#/definitions/DeleteVideoRequest'
+      responses:
+        200:
+          description: video deleted from the system
+        401:
+          description: video not available
+        402:
+          description: system error
+  /listVideo:
+    get:
+      tags:
+      - participants
+      summary: requests the available video segments to be listed on the system
+      description: Requests the available video segments to be listed on the system
+      operationId: listVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ListVideoRequest
+        description: List videos on the system
+        required: true
+        schema:
+         $ref: '#/definitions/ListVideoRequest'
+      responses:
+        200:
+          description: all available videos are shown
+        402:
+          description: system error
+  /createPlaylist:
+    post:
+      tags:
+      - participants
+      summary: request a new playlist to be made
+      description: request a new playlist to be made
+      operationId: createPlaylsit
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: CreatePlaylistRequest
+        description: Request a new playlist to be made
+        required: true
+        schema:
+         $ref: '#/definitions/CreatePlaylistRequest'
+      responses:
+        200:
+          description: playlist is successfully created
+        401:
+          description: Playlist cannot be created
+        402:
+          description: system error
+  /deletePlaylist:
+    post:
+      tags:
+      - participants
+      summary: requests a playlist to be deleted from the system
+      description: Requests a playlist to be deleted from the system
+      operationId: deletePlaylist
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: DeletePlaylistRequest
+        description: Delete playlist from the system
+        required: true
+        schema:
+         $ref: '#/definitions/DeletePlaylistRequest'
+      responses:
+        200:
+          description: playlist deleted from the system
+        401:
+          description: playlist not available
+        402:
+          description: system error
+  /listPlaylist:
+    get:
+      tags:
+      - participants
+      summary: requests to show all available playlist
+      description: Requests to show all available playlist
+      operationId: listPlaylist
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ListPlaylistRequest
+        description: List playlist on the system
+        required: true
+        schema:
+         $ref: '#/definitions/ListPlaylistRequest'
+      responses:
+        200:
+          description: all available playlist are shown
+        402:
+          description: system error
+  /appendVideo:
+    post:
+      tags:
+      - participants
+      summary: requests a video to be appended to a playlist
+      description: Requests a video to be appended to a playlist
+      operationId: appendVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: AppendVideoRequest
+        description: Appends video to playlist
+        required: true
+        schema:
+         $ref: '#/definitions/AppendVideoRequest'
+      responses:
+        200:
+          description: video appended to playlist
+        401:
+          description: video not available
+        402:
+          description: playlist not available
+  /removeVideo:
+    post:
+      tags:
+      - participants
+      summary: requests a video to be from a playlist
+      description: Requests a video to be removed a playlist
+      operationId: removeVideo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: RemoveVideoRequest
+        description: Removes video from a playlist
+        required: true
+        schema:
+         $ref: '#/definitions/RemoveVideoRequest'
+      responses:
+        200:
+          description: video successfully removed to playlist
+        401:
+          description: video not available
+        402:
+          description: video was unable to be removed from the playlist
+  /markLocalVideoSeg:
+    post:
+      tags:
+      - admins
+      summary: Requests a local video segment to be marked
+      description: Requests a local video segment to be marked
+      operationId: markLocalVideoSeg
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: MarkLocalVideoSegRequest
+        description: Local video segment is marked
+        required: true
+        schema:
+         $ref: '#/definitions/MarkLocalVideoSegRequest'
+      responses:
+        200:
+          description: local video successfully marked
+        401:
+          description: local video segment unavailable
+        402:
+          description: local video segment unable to be marked
+  /unmarkLocalVideoSeg:
+    post:
+      tags:
+      - admins
+      summary: Requests a local video segment to be unmarked
+      description: Requests a local video segment to be unmarked
+      operationId: unmarkLocalVideoSeg
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: UnmarkLocalVideoSegRequest
+        description: Local video segment is marked
+        required: true
+        schema:
+         $ref: '#/definitions/UnmarkLocalVideoSegRequest'
+      responses:
+        200:
+          description: local video successfully unmarked
+        401:
+          description: local video segment unavailable
+        402:
+          description: local video segment unable to be unmarked
+  /registerRemoteSite:
+    post:
+      tags:
+      - admins
+      summary: Requests a remote site to be registered
+      description: Requests a remote site to be registered
+      operationId: registerRemoteSite
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: RegisterRemoteSiteRequest
+        description: Remote site is registered to the system
+        required: true
+        schema:
+         $ref: '#/definitions/RegisterRemoteSiteRequest'
+      responses:
+        200:
+          description: remote site was successfully registered
+        401:
+          description: remote site unavailable
+        402:
+          description: remote site unable to be registered
+  /unregisterRemoteSite:
+    post:
+      tags:
+      - admins
+      summary: Requests a remote site to be unregistered
+      description: Requests a remote site to be unregistered
+      operationId: unregisterRemoteSite
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: UnregisterRemoteSiteRequest
+        description: Remote site is unregistered to the system
+        required: true
+        schema:
+         $ref: '#/definitions/UnregisterRemoteSiteRequest'
+      responses:
+        200:
+          description: remote site was successfully unregistered
+        401:
+          description: remote site unavailable
+        402:
+          description: remote site unable to be unregistered
+  /listRemoteSites:
+    get:
+      tags:
+      - admins
+      summary: Requests remote sites to be listed
+      description: Requests remote sites to be listed
+      operationId: listRemoteSites
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ListRemoteSitesRequest
+        description: remote sites are listed
+        required: true
+        schema:
+         $ref: '#/definitions/ListRemoteSitesRequest'
+      responses:
+        200:
+          description: remote site was successfully listed
+        401:
+          description: remote sites unavailable
+        402:
+          description: remote site unable to be listed
+definitions:
+  UploadVideoRequest:
+    type: object
+    required:
+    - videoID
+    - character
+    - quote
+    - base64value
+    properties:
+      videoID:
+        type: string
+      character:
+        type: string
+      quote:
+        type: string
+      base64value:
+        type: string
+  ListVideoRequest:
+    type: object
+  CreatePlaylistRequest:
+    type: object
+    required:
+    - playlistID
+    properties:
+      playlistID:
+        type: string
+  DeletePlaylistRequest:
+    type: object
+    required:
+    - playlistID
+    properties:
+      playlistID:
+        type: string
+  ListPlaylistRequest:
+    type: object
+  AppendVideoRequest:
+    type: object
+    required:
+    - videoID
+    - playlistID
+    properties:
+      videoID:
+        type: string
+      playlistID:
+        type: string
+  DeleteVideoRequest:
+    type: object
+    required:
+    - videoID
+    properties:
+      videoID:
+        type: string
+  RemoveVideoRequest:
+    type: object
+    required:
+    - videoID
+    - playlistID
+    properties:
+      videoID:
+        type: string
+      playlistID:
+        type: string
+  MarkLocalVideoSegRequest:
+    type: object
+    required:
+    - videoID
+    properties:
+      videoID:
+        type: string
+  UnmarkLocalVideoSegRequest:
+    type: object
+    required:
+    - videoID
+    properties:
+      videoID:
+        type: string
+  RegisterRemoteSiteRequest:
+    type: object
+    required:
+    - remoteSiteID
+    properties:
+      remoteSiteID:
+        type: string
+  UnregisterRemoteSiteRequest:
+    type: object
+    required:
+    - remoteSiteID
+    properties:
+      remoteSiteID:
+        type: string
+  ListRemoteSitesRequest:
+    type: object
