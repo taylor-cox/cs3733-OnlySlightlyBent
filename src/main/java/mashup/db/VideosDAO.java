@@ -225,6 +225,16 @@ public class VideosDAO {
 		HashMap<String, String> videos = new HashMap<String, String>();
 		try {
 			// Sets up the querys which we will be using to parse the databases
+			Statement statementnames = conn.createStatement();
+			String querynames = "SELECT * FROM playlistnames";
+			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
+			while(playlistsRespnames.next()) {
+				String id = playlistsRespnames.getString("id");
+				String name = playlistsRespnames.getString("name");
+				Playlist pl = new Playlist(id, name);
+				playlists.put(pl.getId(), pl);
+			}
+			
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM playlist";
 			ResultSet playlistsResp = statement.executeQuery(query);
@@ -232,9 +242,8 @@ public class VideosDAO {
 			// Sets up the character, quote, ID for the videos in library
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
-				String name = playlistsResp.getString("name");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id, name);
+				if(pl == null) pl = new Playlist(id, "N/A");
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
@@ -266,19 +275,17 @@ public class VideosDAO {
 		}
 	}
     
-    public Playlist addPlaylist(Playlist p) throws Exception {
+    public boolean addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	String query = "INSERT INTO playlist (playlistID, playlistName) VALUES (";
+        	String query = "INSERT INTO playlistnames(id, name) VALUES (";
         	query = query + p.getId() + ", " + p.getName() + ")";
-        	ResultSet playlistsResp = statement.executeQuery(query);
-
+        	boolean playlistsResp = statement.execute(query);
+        	return true;
         } catch (Exception e) {
             throw new Exception("Failed adding playlist: " + e.getMessage());
         }
-    	
-    	return p;
     }
 
 	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
