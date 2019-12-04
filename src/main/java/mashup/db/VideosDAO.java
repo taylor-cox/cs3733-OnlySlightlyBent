@@ -1,5 +1,6 @@
 package mashup.db;
 
+import java.io.Console;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -271,8 +272,11 @@ public class VideosDAO {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	String query = "INSERT INTO playlistnames(id, name) VALUES (";
-        	query = query + p.getId() + ", " + p.getName() + ")";
+        	System.out.print("INSERT INTO playlistnames VALUES (" + p.getId() + ", " + p.getName() + ");");
+        	String query = "INSERT INTO playlistnames VALUES (";
+        	System.out.print(query + p.getId() + ", " + p.getName() + ");");
+        	query = query + p.getId() + ", " + p.getName() + ");";
+        	System.out.print(query);
         	boolean playlistsResp = statement.execute(query);
         	return true;
         } catch (Exception e) {
