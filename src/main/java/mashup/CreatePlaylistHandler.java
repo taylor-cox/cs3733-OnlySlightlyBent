@@ -14,7 +14,7 @@ public class CreatePlaylistHandler implements RequestHandler<CreatePlaylistReque
         context.getLogger().log("Input: " + input);
     	VideosDAO dao = VideosDAO.videosDAO();
     	try {
-			dao.addPlaylist(new Playlist(input.getPlaylistID(), input.getPlaylistName()));
+			dao.addPlaylist(new Playlist(input.getPlaylistID()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

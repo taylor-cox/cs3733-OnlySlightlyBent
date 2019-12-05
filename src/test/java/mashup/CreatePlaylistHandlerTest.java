@@ -23,7 +23,7 @@ public class CreatePlaylistHandlerTest {
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
-        input = new CreatePlaylistRequest("123456789", "Fav Star Trek Vids");
+        input = new CreatePlaylistRequest("Fav Star Trek Vids");
     }
 
     private Context createContext() {
@@ -48,7 +48,7 @@ public class CreatePlaylistHandlerTest {
 			}
 			
 	        String output = handler.handleRequest(input, ctx);
-	        Playlist p = new Playlist("123456789", "Fav Star Trek Vids");
+	        Playlist p = new Playlist("Fav Star Trek Vids");
 	        
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {

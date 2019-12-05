@@ -42,7 +42,7 @@ public class DeletePlaylistHandlerTest {
         Context ctx = DeleteContext();
 
 
-        Playlist p = new Playlist("123456789", "Fav Star Trek Vids");
+        Playlist p = new Playlist("Fav Star Trek Vids");
         List<Playlist> playlists = null;
 		try {
 	        VideosDAO.videosDAO().addPlaylist(p);
