@@ -9,11 +9,11 @@ public class DeletePlaylistRequest {
 	
 	public DeletePlaylistRequest() {}
 	
-	public String getVideoID() {
+	public String getPlaylistID() {
 		return playlistID;
 	}
 
-	public void setVideoID(String playlistID) {
+	public void setPlaylistID(String playlistID) {
 		this.playlistID = playlistID;
 	}
 }
