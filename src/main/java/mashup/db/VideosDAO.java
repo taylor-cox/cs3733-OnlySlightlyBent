@@ -260,7 +260,7 @@ public class VideosDAO {
             Statement statement = conn.createStatement();
             String query = "SELECT * FROM `registered-sites`";
             ResultSet registeredSiteResp = statement.executeQuery(query);
-            
+            //pls
             
             // Sets up the character, quote, ID for the videos in library
             while(registeredSiteResp.next())  {
