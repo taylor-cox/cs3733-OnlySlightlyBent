@@ -254,7 +254,13 @@ function handleDeletePlaylist(p) {
     hide(videoElement.childNodes[p]);
     // videoElement.removeChild(videoElement.childNodes[p]);
     if(selectedPlaylist == p) selectedPlaylist = -1;
+    var xml = createCORSRequest("POST", delete_playlist_url);
+    var json = {
+        playlistID: playlists[p].id
+    };
+    xml.send(json);
     playlists.splice(p, 1);
+    playlistNum--;
 }
 
 function handleNewVideo() {
@@ -280,6 +286,13 @@ function handleNewPlaylist() {
     else
         playlists.push({ id: newName, entries: [] });
     addNewPlaylist(playlists.length - 1);
+    var xml = createCORSRequest("POST", create_playlist_url);
+    var json = {
+        playlistID: newName,
+        playlistName: newName
+    };
+    xml.send(json);
+    playlistNum++;
 }
 
 function handleViewPlaylist(i) {
