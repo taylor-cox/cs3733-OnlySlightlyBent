@@ -264,9 +264,8 @@ public class VideosDAO {
             
             // Sets up the character, quote, ID for the videos in library
             while(registeredSiteResp.next())  {
-            	String id = registeredSiteResp.getString("id");
             	String url = registeredSiteResp.getString("url");
-            	Site nice = new Site(id, url);
+            	Site nice = new Site(url);
             	output.add(nice);
             }
             return output;
@@ -286,12 +285,6 @@ public class VideosDAO {
 		String quote = resultSet.getString("Quote");
 		String ID = resultSet.getString("ID");
 		return new Video(ID, character, quote, "");
-	}
-	
-	private Site generateSite(ResultSet resultSet) throws Exception {
-    	String id = resultSet.getString("id");
-    	String url = resultSet.getString("url");
-    	return new Site(id, url);
 	}
 
 }
