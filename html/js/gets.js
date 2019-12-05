@@ -65,6 +65,31 @@ function fetchPlaylists() {
     };
 }
 
+function fetchRemoteSites() {
+    // Fetches the playlists, updates the playlists list (js) and reconstructs the
+    // viewable list of playlists
+    var xhr2 = createCORSRequest("GET", list_playlist_url);
+    xhr2.send();
+
+    console.log("Attempting to process playlists...");
+    xhr2.onloadend = function () {
+        // console.log(xhr);
+        // console.log(xhr.request);
+        if (xhr2.readyState == XMLHttpRequest.DONE) {
+            if (xhr2.status == 200) {
+                // console.log("XHR:" + xhr.responseText);
+                processListPlaylistResponse(xhr2.responseText);
+            } else if (xhr2.status == 400) {
+                alert("unable to process request");
+            }
+        } else {
+            processListPlaylistResponse("N/A");
+        }
+        // setTimeout(function () { makeList(1, 0, playlists.length) }, 2000);
+        loadPlaylists();
+    };
+}
+
 function processListVideoResponse(result) {
     // Takes a json of all the videos and puts it into videos array, and
     // returns the json.
