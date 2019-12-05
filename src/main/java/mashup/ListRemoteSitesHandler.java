@@ -1,7 +1,5 @@
 package mashup;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.amazonaws.services.lambda.runtime.Context;
