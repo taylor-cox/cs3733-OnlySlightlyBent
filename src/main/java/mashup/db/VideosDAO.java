@@ -263,6 +263,13 @@ public class VideosDAO {
             String query = "SELECT * FROM `registered-sites`";
             ResultSet registeredSiteResp = statement.executeQuery(query);
             
+            while(registeredSiteResp.next()) {
+				String id = registeredSiteResp.getString("id");
+				String url = registeredSiteResp.getString("url");
+				Site nice = new Site(id, url);
+				output.add(nice);
+			}
+            
             // Sets up the character, quote, ID for the videos in library
             while(registeredSiteResp.next()) 
             	output.add(generateSite(registeredSiteResp));
