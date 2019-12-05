@@ -213,6 +213,17 @@ public class VideosDAO {
 		}
 	}
 	
+	public boolean unregisterRemoteSite(String url) throws Exception {
+		try {
+			PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `registered-sites` VALUES (?)");
+			ps2.setString(1, url);
+			if(ps2.executeUpdate() == 0) return false;
+			return true;
+		} catch (Exception e) {
+			throw new Exception("Failed in getting books: " + e.getMessage());
+		}
+	}
+	
 
     
     public boolean addPlaylist(Playlist p) throws Exception {
