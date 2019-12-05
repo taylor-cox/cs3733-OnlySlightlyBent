@@ -24,7 +24,7 @@ public class UnregisterRemoteSiteHandler implements RequestHandler<UnregisterSit
 				else
 					response = new UnregisterSiteResponse(401, "Site is already removed.");
 			} catch (Exception e) {
-				response = new UnregisterSiteResponse(402, "Site could not be removed at this time.");
+				response = new UnregisterSiteResponse(402, "Site could not be removed at this time oh no.");
 				e.printStackTrace();
 			}
 	        
