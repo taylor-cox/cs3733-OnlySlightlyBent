@@ -68,25 +68,25 @@ function fetchPlaylists() {
 function fetchRemoteSites() {
     // Fetches the playlists, updates the playlists list (js) and reconstructs the
     // viewable list of playlists
-    var xhr2 = createCORSRequest("GET", list_playlist_url);
+    var xhr2 = createCORSRequest("GET", list_remote_site_url);
     xhr2.send();
 
-    console.log("Attempting to process playlists...");
+    console.log("Attempting to process remote sites...");
     xhr2.onloadend = function () {
         // console.log(xhr);
         // console.log(xhr.request);
         if (xhr2.readyState == XMLHttpRequest.DONE) {
             if (xhr2.status == 200) {
                 // console.log("XHR:" + xhr.responseText);
-                processListPlaylistResponse(xhr2.responseText);
+                processListRemoteSitesResponse(xhr2.responseText);
             } else if (xhr2.status == 400) {
                 alert("unable to process request");
             }
         } else {
-            processListPlaylistResponse("N/A");
+            processRemoteSitesResponse("N/A");
         }
         // setTimeout(function () { makeList(1, 0, playlists.length) }, 2000);
-        loadPlaylists();
+        // loadRemoteSites();
     };
 }
 
@@ -108,6 +108,16 @@ function processListPlaylistResponse(result) {
     for (pl in js.list) {
         playlists[pl] = js.list[pl];
         playlistNum++;
+    }
+    return js;
+}
+
+function processRemoteSitesResponse(result) {
+    // Takes a json of all the playlists and puts it into playlists array, and
+    // returns the json.
+    var js = JSON.parse(result);
+    for (site in js.list) {
+        sites[site] = js.list[site];
     }
     return js;
 }
