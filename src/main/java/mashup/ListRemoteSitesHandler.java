@@ -9,15 +9,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import mashup.db.VideosDAO;
-import mashup.http.AllPlaylistResponse;
 import mashup.http.AllSitesResponse;
-import mashup.http.AllVideosResponse;
-import mashup.model.Library;
-import mashup.model.Playlist;
+import mashup.http.ListRemoteSitesRequest;
 import mashup.model.Site;
-import mashup.model.Video;
 
-public class ListRemoteSitesHandler implements RequestHandler<Object, AllSitesResponse> {
+public class ListRemoteSitesHandler implements RequestHandler<ListRemoteSitesRequest, AllSitesResponse> {
 
 	public LambdaLogger logger;
 	
@@ -30,10 +26,9 @@ public class ListRemoteSitesHandler implements RequestHandler<Object, AllSitesRe
 		return dao.getRegisteredSites();
 	}
 	
-    @Override
-    public AllSitesResponse handleRequest(Object input, Context context) {
+    public AllSitesResponse handleRequest(ListRemoteSitesRequest input, Context context) {
         logger = context.getLogger();
-        logger.log("Loading Java Lamdba Function to list all remote sites.");
+        logger.log("Loading Java Lambda Function to list all remote sites.");
         
         AllSitesResponse response;
         
