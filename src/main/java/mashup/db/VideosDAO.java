@@ -159,8 +159,7 @@ public class VideosDAO {
 			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
 			while(playlistsRespnames.next()) {
 				String id = playlistsRespnames.getString("id");
-				String name = playlistsRespnames.getString("name");
-				Playlist pl = new Playlist(id, name);
+				Playlist pl = new Playlist(id);
 				playlists.put(pl.getId(), pl);
 			}
 			
@@ -172,7 +171,7 @@ public class VideosDAO {
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id, id);
+				if(pl == null) pl = new Playlist(id);
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
@@ -230,9 +229,8 @@ public class VideosDAO {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?, ?);");
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?);");
         	ps.setString(1, p.getId());
-        	ps.setString(2, p.getName());
         	
         	int playlistsResp = ps.executeUpdate();
         	return true;
