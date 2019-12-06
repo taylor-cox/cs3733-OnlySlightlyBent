@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+// Handles all the post requests of the website
 
 function registerWebsitePost() {
     var xhr = createCORSRequest("POST", register_remote_site_url);
