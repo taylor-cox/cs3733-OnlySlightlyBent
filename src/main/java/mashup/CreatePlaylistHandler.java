@@ -17,7 +17,10 @@ public class CreatePlaylistHandler implements RequestHandler<CreatePlaylistReque
     	CreatePlaylistResponse response;
     	try {
 			dao.addPlaylist(new Playlist(input.getPlaylistID()));
+<<<<<<< HEAD
 			response = new CreatePlaylistResponse(200);
+=======
+>>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

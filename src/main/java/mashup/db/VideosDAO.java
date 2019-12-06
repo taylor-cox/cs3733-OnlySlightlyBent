@@ -159,7 +159,10 @@ public class VideosDAO {
 			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
 			while(playlistsRespnames.next()) {
 				String id = playlistsRespnames.getString("id");
+<<<<<<< HEAD
 				String name = playlistsRespnames.getString("name");
+=======
+>>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
 				Playlist pl = new Playlist(id);
 				playlists.put(pl.getId(), pl);
 			}
@@ -229,10 +232,19 @@ public class VideosDAO {
     public boolean addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
         try {
+<<<<<<< HEAD
         	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlist VALUES (?, ?, ?);");
+=======
+        	Statement statement = conn.createStatement();
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?);");
+>>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
         	ps.setString(1, p.getId());
+<<<<<<< HEAD
         	ps.setString(2, "0");
         	ps.setString(3, "0");
+=======
+        	
+>>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
         	int playlistsResp = ps.executeUpdate();
         	if(playlistsResp == 0) return false;
         	return true;
@@ -262,15 +274,19 @@ public class VideosDAO {
             Statement statement = conn.createStatement();
             String query = "SELECT * FROM `registered-sites`";
             ResultSet registeredSiteResp = statement.executeQuery(query);
+            //pls
             
             // Sets up the character, quote, ID for the videos in library
-            while(registeredSiteResp.next()) 
-            	output.add(generateSite(registeredSiteResp));
+            while(registeredSiteResp.next())  {
+            	String url = registeredSiteResp.getString("url");
+            	Site nice = new Site(url);
+            	output.add(nice);
+            }
             return output;
         } catch (Exception e) {
             throw new Exception("Failed in getting books: " + e.getMessage());
         }
-    }
+   }
 
 	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
 		String video = resultSet.getString("video");
@@ -283,12 +299,6 @@ public class VideosDAO {
 		String quote = resultSet.getString("Quote");
 		String ID = resultSet.getString("ID");
 		return new Video(ID, character, quote, "");
-	}
-	
-	private Site generateSite(ResultSet resultSet) throws Exception {
-    	String id = resultSet.getString("id");
-    	String url = resultSet.getString("url");
-    	return new Site(id, url);
 	}
 
 }

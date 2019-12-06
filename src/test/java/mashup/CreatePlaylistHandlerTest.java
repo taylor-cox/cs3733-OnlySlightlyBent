@@ -48,7 +48,11 @@ public class CreatePlaylistHandlerTest {
 				System.out.print(playlists.get(i).toString() + "\n");
 			}
 			
+<<<<<<< HEAD
 			CreatePlaylistResponse output = handler.handleRequest(input, ctx);
+=======
+	        String output = handler.handleRequest(input, ctx);
+>>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
 	        Playlist p = new Playlist("Fav Star Trek Vids");
 	        
 			playlists = VideosDAO.videosDAO().getPlaylists();
