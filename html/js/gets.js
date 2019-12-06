@@ -66,8 +66,8 @@ function fetchPlaylists() {
 }
 
 function fetchRemoteSites() {
-    // Fetches the playlists, updates the playlists list (js) and reconstructs the
-    // viewable list of playlists
+    // Fetches the remote sites, updates the remote sites list (js) and reconstructs the
+    // viewable list of remote sites
     var xhr2 = createCORSRequest("GET", list_remote_site_url);
     xhr2.send();
 
@@ -83,7 +83,7 @@ function fetchRemoteSites() {
                 alert("unable to process request");
             }
         } else {
-            processRemoteSitesResponse("N/A");
+            processListRemoteSitesResponse("N/A");
         }
         // setTimeout(function () { makeList(1, 0, playlists.length) }, 2000);
         // loadRemoteSites();
@@ -112,11 +112,12 @@ function processListPlaylistResponse(result) {
     return js;
 }
 
-function processRemoteSitesResponse(result) {
+function processListRemoteSitesResponse(result) {
     // Takes a json of all the playlists and puts it into playlists array, and
     // returns the json.
     var js = JSON.parse(result);
     for (site in js.list) {
+        console.log(js)
         sites[site] = js.list[site];
     }
     return js;

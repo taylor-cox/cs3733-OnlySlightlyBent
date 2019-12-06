@@ -160,7 +160,7 @@ public class VideosDAO {
 			while(playlistsRespnames.next()) {
 				String id = playlistsRespnames.getString("id");
 				String name = playlistsRespnames.getString("name");
-				Playlist pl = new Playlist(id, name);
+				Playlist pl = new Playlist(id);
 				playlists.put(pl.getId(), pl);
 			}
 			
@@ -172,7 +172,7 @@ public class VideosDAO {
 			while(playlistsResp.next()) {
 				String id = playlistsResp.getString("id");
 				Playlist pl = playlists.get(id);
-				if(pl == null) pl = new Playlist(id, id);
+				if(pl == null) pl = new Playlist(id);
 				PlaylistEntry toAdd = generatePlaylistEntry(playlistsResp);
 
 				videos.put(toAdd.getVideoID(), toAdd.getVideoID());
@@ -229,12 +229,12 @@ public class VideosDAO {
     public boolean addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
         try {
-        	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?, ?);");
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlist VALUES (?, ?, ?);");
         	ps.setString(1, p.getId());
-        	ps.setString(2, p.getName());
-        	
+        	ps.setString(2, "0");
+        	ps.setString(3, "0");
         	int playlistsResp = ps.executeUpdate();
+        	if(playlistsResp == 0) return false;
         	return true;
         } catch (Exception e) {
             throw new Exception("Failed adding playlist: " + e.getMessage());

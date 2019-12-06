@@ -288,8 +288,7 @@ function handleNewPlaylist() {
     addNewPlaylist(playlists.length - 1);
     var xml = createCORSRequest("POST", create_playlist_url);
     var json = {
-        playlistID: newName,
-        playlistName: newName
+        playlistID: newName
     };
     xml.send(json);
     playlistNum++;
