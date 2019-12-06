@@ -198,11 +198,6 @@ public class VideosDAO {
 	
 	public boolean registerRemoteSite(String url) throws Exception {
 		try {
-			// Sets up the queries which we will be using to parse the databases
-//			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `registered-sites` WHERE `url`=?");
-//			ps.setString(1, url);
-//			ResultSet sites = ps.executeQuery();
-//			if(!sites.next()) return false;
 			
 			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `registered-sites` VALUES (?)");
 			ps2.setString(1, url);
@@ -215,7 +210,7 @@ public class VideosDAO {
 	
 	public boolean unregisterRemoteSite(String url) throws Exception {
 		try {
-			PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `registered-sites` VALUES (?)");
+			PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `registered-sites` WHERE url=?");
 			ps2.setString(1, url);
 			if(ps2.executeUpdate() == 0) return false;
 			return true;
