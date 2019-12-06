@@ -15,6 +15,12 @@ function loadPlaylists() {
     }
 }
 
+function loadRemoteSites() {
+    for(var i = 0; i < sites.length; i++) {
+        addNewSite(i);
+    }
+}
+
 function addNewVideo(i) {
     var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
     var videosElement = document.getElementById("videos");
@@ -126,6 +132,43 @@ function addNewPlaylist(i) {
     newDiv.appendChild(viewButton);
     playlistsElement.appendChild(newDiv);
 }
+
+function addNewSite(i) {
+    var sitesElement = document.getElementById("sites");
+    var newDiv = document.createElement("DIV");
+    // if (i % 2 == 0) newDiv.className = "rowEven";
+    // else newDiv.className = "rowOdd";
+
+    newDiv.className = "interiorRow";
+
+    let x = i;
+    newDiv.id = i;
+    newDiv.onclick = function () {
+        selectPlaylist(x);
+    };
+
+    var textSpan = document.createElement("SPAN");
+    textSpan.className = "columnName";
+    textSpan.style = "width:50%";
+    textSpan.innerText = sites[i].url;
+
+    var deleteButton = document.createElement("BUTTON");
+    deleteButton.setAttribute("type", "button");
+    deleteButton.setAttribute("style", "float: right");
+    var trashCanImage = document.createElement("IMG");
+    trashCanImage.setAttribute("src", "images/trash_can.png");
+    deleteButton.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        handleDeleteSite(x);
+    };
+    deleteButton.appendChild(trashCanImage);
+
+    newDiv.appendChild(textSpan);
+    newDiv.appendChild(deleteButton);
+    sitesElement.appendChild(newDiv);
+}
+
 
 function showPlaylistVideos() {
     var videosElement = document.getElementById("videos").childNodes;
@@ -254,13 +297,15 @@ function handleDeletePlaylist(p) {
     hide(videoElement.childNodes[p]);
     // videoElement.removeChild(videoElement.childNodes[p]);
     if(selectedPlaylist == p) selectedPlaylist = -1;
-    var xml = createCORSRequest("POST", delete_playlist_url);
-    var json = {
-        playlistID: playlists[p].id
-    };
-    xml.send(json);
+    deletePlaylistPost(p);
     playlists.splice(p, 1);
     playlistNum--;
+}
+
+function handleDeleteSite(s) {
+    var sitesElement = document.getElementById("sites");
+    hide(sitesElement.childNodes[s]);
+
 }
 
 function handleNewVideo() {
@@ -334,6 +379,7 @@ function addVideoToPlaylist(v) {
 function main() {
     fetchVideos();
     fetchPlaylists();
+    fetchRemoteSites();
 
     columns = [
         document.getElementsByName('playlistColumn')[0],

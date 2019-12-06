@@ -86,7 +86,7 @@ function fetchRemoteSites() {
             processListRemoteSitesResponse("N/A");
         }
         // setTimeout(function () { makeList(1, 0, playlists.length) }, 2000);
-        // loadRemoteSites();
+        loadRemoteSites();
     };
 }
 
