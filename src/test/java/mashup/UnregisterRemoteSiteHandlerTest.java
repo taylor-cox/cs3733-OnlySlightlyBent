@@ -11,7 +11,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class UnregisterRemoteSiteHandlerTest {
+public class UnregisterRemoteSiteHandlerTest extends LambdaTest {
 
     private static Object input;
 
