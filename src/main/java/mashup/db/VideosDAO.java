@@ -159,10 +159,7 @@ public class VideosDAO {
 			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
 			while(playlistsRespnames.next()) {
 				String id = playlistsRespnames.getString("id");
-<<<<<<< HEAD
 				String name = playlistsRespnames.getString("name");
-=======
->>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
 				Playlist pl = new Playlist(id);
 				playlists.put(pl.getId(), pl);
 			}
@@ -232,19 +229,11 @@ public class VideosDAO {
     public boolean addPlaylist(Playlist p) throws Exception {
     	// Sets up the querys which we will be using to parse the databases
         try {
-<<<<<<< HEAD
         	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlist VALUES (?, ?, ?);");
-=======
-        	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlistnames VALUES (?);");
->>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
         	ps.setString(1, p.getId());
-<<<<<<< HEAD
         	ps.setString(2, "0");
         	ps.setString(3, "0");
-=======
         	
->>>>>>> branch 'master' of https://taylor-cox@github.com/taylor-cox/OnlySlightlyBent.git
         	int playlistsResp = ps.executeUpdate();
         	if(playlistsResp == 0) return false;
         	return true;
