@@ -4,6 +4,8 @@ var list_playlist_url = base_url + "listPlaylist";
 var delete_playlist_url = base_url + "deletePlaylist";
 var create_playlist_url = base_url + "createPlaylist";
 var list_remote_site_url = base_url + "listRemoteSites";
+var register_remote_site_url = base_url + "listRemoteSites";
+var unregister_remote_site_url = base_url + "listRemoteSites";
 
 // var get_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/secure/";
 var playlistNum = 1;
