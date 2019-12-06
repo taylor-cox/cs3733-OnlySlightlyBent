@@ -154,15 +154,15 @@ public class VideosDAO {
 		HashMap<String, String> videos = new HashMap<String, String>();
 		try {
 			// Sets up the querys which we will be using to parse the databases
-			Statement statementnames = conn.createStatement();
-			String querynames = "SELECT * FROM playlistnames";
-			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
-			while(playlistsRespnames.next()) {
-				String id = playlistsRespnames.getString("id");
-				String name = playlistsRespnames.getString("name");
-				Playlist pl = new Playlist(id);
-				playlists.put(pl.getId(), pl);
-			}
+//			Statement statementnames = conn.createStatement();
+//			String querynames = "SELECT * FROM playlistnames";
+//			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
+//			while(playlistsRespnames.next()) {
+//				String id = playlistsRespnames.getString("id");
+//				String name = playlistsRespnames.getString("name");
+//				Playlist pl = new Playlist(id);
+//				playlists.put(pl.getId(), pl);
+//			}
 			
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM playlist";
@@ -246,7 +246,7 @@ public class VideosDAO {
     	// Sets up the querys which we will be using to parse the databases
         try {
         	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("DELETE FROM playlistnames WHERE id = ? LIMIT 1;");
+        	PreparedStatement ps = conn.prepareStatement("DELETE FROM playlist WHERE id = ? LIMIT 1;");
         	ps.setString(1, p);
         	
         	int playlistsResp = ps.executeUpdate();

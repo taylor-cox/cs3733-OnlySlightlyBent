@@ -24,7 +24,7 @@ public class DeletePlaylistHandlerTest {
     @BeforeClass
     public static void DeleteInput() throws IOException {
         // TODO: set up your sample input object here.
-        input = new DeletePlaylistRequest("123456789");
+        input = new DeletePlaylistRequest("Fav Star Trek Vids");
     }
 
     private Context DeleteContext() {
