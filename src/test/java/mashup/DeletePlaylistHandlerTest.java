@@ -17,7 +17,7 @@ import mashup.model.Playlist;
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class DeletePlaylistHandlerTest {
+public class DeletePlaylistHandlerTest extends LambdaTest {
 
     private static DeletePlaylistRequest input;
 
