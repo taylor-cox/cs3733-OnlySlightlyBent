@@ -40,7 +40,7 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
     public void testDeletePlaylistHandler() {
         DeletePlaylistHandler handler = new DeletePlaylistHandler();
         Context ctx = DeleteContext();
-
+        boolean doesContainPlaylist = false;
 
         Playlist p = new Playlist("Fav Star Trek Vids");
         List<Playlist> playlists = null;
@@ -49,14 +49,18 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {
 				System.out.print(playlists.get(i).toString() + "\n");
+		        if (playlists.get(i).getId().matches(p.getId())) doesContainPlaylist = true;
 			}
+	        Assert.assertEquals(doesContainPlaylist, true);
 			
+	        doesContainPlaylist = false;
 	        String output = handler.handleRequest(input, ctx);
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {
 				System.out.print(playlists.get(i).toString() + "\n");
+		        if (playlists.get(i).getId() == p.getId()) doesContainPlaylist = true;
 			}
-	        Assert.assertEquals(playlists.get(playlists.size()-1).toString(), p.toString());
+	        Assert.assertEquals(doesContainPlaylist, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
