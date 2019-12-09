@@ -12,6 +12,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import mashup.db.VideosDAO;
 import mashup.http.CreatePlaylistRequest;
 import mashup.http.DeletePlaylistRequest;
+import mashup.http.DeletePlaylistResponse;
 import mashup.model.Playlist;
 
 /**
@@ -54,7 +55,7 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
 	        Assert.assertEquals(doesContainPlaylist, true);
 			
 	        doesContainPlaylist = false;
-	        String output = handler.handleRequest(input, ctx);
+	        DeletePlaylistResponse output = handler.handleRequest(input, ctx);
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {
 				System.out.print(playlists.get(i).toString() + "\n");
