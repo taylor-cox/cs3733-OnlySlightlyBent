@@ -10,6 +10,8 @@ import java.util.List;
 import mashup.model.Library;
 import mashup.model.Playlist;
 import mashup.model.PlaylistEntry;
+import mashup.model.PublicLibrary;
+import mashup.model.PublicSegment;
 import mashup.model.Site;
 import mashup.model.Video;
 
@@ -134,6 +136,42 @@ public class VideosDAO {
 			// Adds filenames to the corresponding videos
 			while(library.next()) {
 				lib.addFileName(library.getString("ID"), library.getString("FileName"));
+			}
+
+			// REMEMBER TO CLOSE ALL CONNECTIONS!
+			library.close();
+			videos.close();
+			statement.close();
+			return lib;
+
+		} catch (Exception e) {
+			throw new Exception("Failed in getting books: " + e.getMessage());
+		}
+	}
+	
+	public PublicLibrary getPublicLibrary() throws Exception {
+		/**
+		 * Gets all the videos (and data corresponding) from the database(s).
+		 */
+		PublicLibrary lib = new PublicLibrary();
+		try {
+			// Sets up the querys which we will be using to parse the databases
+			Statement statement = conn.createStatement();
+			Statement statement2 = conn.createStatement();
+			String query = "SELECT * FROM videos;";
+			ResultSet videos = statement.executeQuery(query);
+			query = "SELECT * FROM library;";
+			ResultSet library = statement2.executeQuery(query);
+
+			// Sets up the character, quote, ID for the videos in library
+			while(videos.next()) {
+				PublicSegment video = generatePublicSegment(videos);
+				lib.addPublicSegment(video);
+			}
+
+			// Adds filenames to the corresponding videos
+			while(library.next()) {
+				lib.addFileName(library.getString("ID"), "https://3733onlyslightlybent.s3.amazonaws.com/video-clips/" + library.getString("FileName"));
 			}
 
 			// REMEMBER TO CLOSE ALL CONNECTIONS!
@@ -328,6 +366,13 @@ public class VideosDAO {
 		String quote = resultSet.getString("Quote");
 		String ID = resultSet.getString("ID");
 		return new Video(ID, character, quote, "");
+	}
+	
+	private PublicSegment generatePublicSegment(ResultSet resultSet) throws Exception {
+		String character  = resultSet.getString("Character");
+		String text = resultSet.getString("Quote");
+		String ID = resultSet.getString("ID");
+		return new PublicSegment(ID, character, text, "");
 	}
 
 	public int largestVideoID() throws SQLException {
