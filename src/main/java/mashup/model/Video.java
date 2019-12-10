@@ -20,6 +20,13 @@ public class Video {
 		this.isMarked = isMarked;
 	}
 	
+	public Video(String ID, String character, String quote, String fileName) {
+		this.ID = ID;
+		this.character = character;
+		this.quote = quote;
+		this.fileName = fileName;
+	}
+	
 	public String getID() { return ID; }
 	public void setID(String ID) { this.ID = ID; }
 	public String getCharacter() { return character; }
