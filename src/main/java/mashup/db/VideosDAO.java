@@ -137,6 +137,8 @@ public class VideosDAO {
 			while(library.next()) {
 				lib.addFileName(library.getString("ID"), library.getString("FileName"));
 			}
+			
+			
 
 			// REMEMBER TO CLOSE ALL CONNECTIONS!
 			library.close();

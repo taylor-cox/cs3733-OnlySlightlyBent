@@ -10,12 +10,14 @@ public class Video {
 	public String character;
 	public String quote;
 	public String fileName;
+	public Boolean marked;
 
-	public Video(String ID, String character, String quote, String fileName) {
+	public Video(String ID, String character, String quote, String fileName, Boolean marked) {
 		this.ID = ID;
 		this.character = character;
 		this.quote = quote;
 		this.fileName = fileName;
+		this.marked = marked;
 	}
 	
 	public String getID() { return ID; }
@@ -26,6 +28,8 @@ public class Video {
 	public void setQuote(String quote) { this.quote = quote; }
 	public String getFileName() { return fileName; }
 	public void setFileName(String fileName) { this.fileName = fileName; }
+	public Boolean getMarked() { return marked; }
+	public void setMarked(Boolean marked) { this.marked = marked; }
 
 	@Override
 	public String toString() {
