@@ -365,7 +365,8 @@ public class VideosDAO {
 		String character  = resultSet.getString("Character");
 		String quote = resultSet.getString("Quote");
 		String ID = resultSet.getString("ID");
-		return new Video(ID, character, quote, "");
+		Boolean isMarked = resultSet.getBoolean("isMarked");
+		return new Video(ID, character, quote, "", isMarked);
 	}
 	
 	private PublicSegment generatePublicSegment(ResultSet resultSet) throws Exception {
