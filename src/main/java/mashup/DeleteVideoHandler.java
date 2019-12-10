@@ -3,14 +3,33 @@ package mashup;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class DeleteVideoHandler implements RequestHandler<Object, String> {
+import mashup.db.VideosDAO;
+import mashup.http.DeleteVideoRequest;
+import mashup.http.DeleteVideoResponse;
+import mashup.http.UnmarkLocalVideoSegResponse;
+
+public class DeleteVideoHandler implements RequestHandler<DeleteVideoRequest, DeleteVideoResponse> {
+	
+	boolean deleteVideo(String videoID) throws Exception {
+		return VideosDAO.videosDAO().deleteVideo(videoID);
+	}
 
     @Override
-    public String handleRequest(Object input, Context context) {
+    public DeleteVideoResponse handleRequest(DeleteVideoRequest input, Context context) {
         context.getLogger().log("Input: " + input);
-
-        // TODO: implement your handler
-        return "Hello from Lambda!";
+        DeleteVideoResponse response;
+        
+        try {
+			if(deleteVideo(input.getVideoID()))
+				response = new DeleteVideoResponse(200);
+			else
+				response = new DeleteVideoResponse(403, "Video could not be marked.");
+		} catch (Exception e) {
+			response = new DeleteVideoResponse(403, "Video could not be marked.");
+			e.printStackTrace();
+		}
+        
+        return response;
     }
 
 }

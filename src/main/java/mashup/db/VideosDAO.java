@@ -10,6 +10,8 @@ import java.util.List;
 import mashup.model.Library;
 import mashup.model.Playlist;
 import mashup.model.PlaylistEntry;
+import mashup.model.PublicLibrary;
+import mashup.model.PublicSegment;
 import mashup.model.Site;
 import mashup.model.Video;
 
@@ -39,7 +41,7 @@ public class VideosDAO {
 		}
 		return videosDAO;
 	}
-	
+
 	public boolean unmarkVideo(String videoID) throws Exception {
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='n' WHERE id = ?;");
@@ -64,17 +66,18 @@ public class VideosDAO {
 		}
 	}
 
-		public boolean appendVideoToPlaylist(String videoID, String playlistID) throws Exception {
+	public boolean appendVideoToPlaylist(String videoID, String playlistID) throws Exception {
 		try {
 			// Sets up the queries which we will be using to parse the databases
-															 
+
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE id=?;");
 			ps.setString(1,  playlistID);
 			ResultSet videos = ps.executeQuery();
 			int maxOrder = 0;
 			while(videos.next()) {
+				System.out.println(videos);
 				int order = Integer.parseInt(videos.getString("order"));
-				if(videos.getString("video") == videoID) return false;
+				if(videos.getString("video").equals(videoID)) return false;
 				else if(order > maxOrder) maxOrder = order;
 			}
 			maxOrder++;
@@ -91,16 +94,13 @@ public class VideosDAO {
 	}
 
 	public boolean removeVideoFromPlaylist(String videoID, String playlistID) throws Exception {
-		try {
-			// Sets up the querys which we will be using to parse the databases
-												
-												 
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `playlist` WHERE video='?' AND id='?';");
+		try {							 
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM playlist WHERE video=? AND id=?");
 			ps.setString(1, videoID);
 			ps.setString(2, playlistID);
 			ResultSet videos = ps.executeQuery();
 			if(videos.next()) {
-				PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `playlist` WHERE video='?' AND id='?';");
+				PreparedStatement ps2 = conn.prepareStatement("DELETE FROM playlist WHERE video=? AND id=?");
 				ps2.setString(1, videoID);
 				ps2.setString(2, playlistID);
 				if(ps2.executeUpdate() == 0) return false;
@@ -137,8 +137,42 @@ public class VideosDAO {
 			while(library.next()) {
 				lib.addFileName(library.getString("ID"), library.getString("FileName"));
 			}
-			
-			
+
+			// REMEMBER TO CLOSE ALL CONNECTIONS!
+			library.close();
+			videos.close();
+			statement.close();
+			return lib;
+
+		} catch (Exception e) {
+			throw new Exception("Failed in getting books: " + e.getMessage());
+		}
+	}
+	
+	public PublicLibrary getPublicLibrary() throws Exception {
+		/**
+		 * Gets all the videos (and data corresponding) from the database(s).
+		 */
+		PublicLibrary lib = new PublicLibrary();
+		try {
+			// Sets up the querys which we will be using to parse the databases
+			Statement statement = conn.createStatement();
+			Statement statement2 = conn.createStatement();
+			String query = "SELECT * FROM videos;";
+			ResultSet videos = statement.executeQuery(query);
+			query = "SELECT * FROM library;";
+			ResultSet library = statement2.executeQuery(query);
+
+			// Sets up the character, quote, ID for the videos in library
+			while(videos.next()) {
+				PublicSegment video = generatePublicSegment(videos);
+				lib.addPublicSegment(video);
+			}
+
+			// Adds filenames to the corresponding videos
+			while(library.next()) {
+				lib.addFileName(library.getString("ID"), "https://3733onlyslightlybent.s3.amazonaws.com/video-clips/" + library.getString("FileName"));
+			}
 
 			// REMEMBER TO CLOSE ALL CONNECTIONS!
 			library.close();
@@ -156,16 +190,16 @@ public class VideosDAO {
 		HashMap<String, String> videos = new HashMap<String, String>();
 		try {
 			// Sets up the querys which we will be using to parse the databases
-			Statement statementnames = conn.createStatement();
-			String querynames = "SELECT * FROM playlistnames";
-			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
-			while(playlistsRespnames.next()) {
-				String id = playlistsRespnames.getString("id");
-				String name = playlistsRespnames.getString("name");
-				Playlist pl = new Playlist(id);
-				playlists.put(pl.getId(), pl);
-			}
-			
+			//			Statement statementnames = conn.createStatement();
+			//			String querynames = "SELECT * FROM playlistnames";
+			//			ResultSet playlistsRespnames = statementnames.executeQuery(querynames);
+			//			while(playlistsRespnames.next()) {
+			//				String id = playlistsRespnames.getString("id");
+			//				String name = playlistsRespnames.getString("name");
+			//				Playlist pl = new Playlist(id);
+			//				playlists.put(pl.getId(), pl);
+			//			}
+
 			Statement statement = conn.createStatement();
 			String query = "SELECT * FROM playlist";
 			ResultSet playlistsResp = statement.executeQuery(query);
@@ -197,10 +231,15 @@ public class VideosDAO {
 			throw new Exception("Failed in getting books: " + e.getMessage());
 		}
 	}
-	
+
 	public boolean registerRemoteSite(String url) throws Exception {
 		try {
-			
+			// Sets up the queries which we will be using to parse the databases
+			//			PreparedStatement ps = conn.prepareStatement("SELECT * FROM `registered-sites` WHERE `url`=?");
+			//			ps.setString(1, url);
+			//			ResultSet sites = ps.executeQuery();
+			//			if(!sites.next()) return false;
+
 			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO `registered-sites` VALUES (?)");
 			ps2.setString(1, url);
 			if(ps2.executeUpdate() == 0) return false;
@@ -209,10 +248,10 @@ public class VideosDAO {
 			throw new Exception("Failed in getting books: " + e.getMessage());
 		}
 	}
-	
+
 	public boolean unregisterRemoteSite(String url) throws Exception {
 		try {
-			PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `registered-sites` WHERE url=?");
+			PreparedStatement ps2 = conn.prepareStatement("DELETE FROM `registered-sites` VALUES (?)");
 			ps2.setString(1, url);
 			if(ps2.executeUpdate() == 0) return false;
 			return true;
@@ -220,59 +259,101 @@ public class VideosDAO {
 			throw new Exception("Failed in getting books: " + e.getMessage());
 		}
 	}
-	
 
-    
-    public boolean addPlaylist(Playlist p) throws Exception {
-    	// Sets up the querys which we will be using to parse the databases
-        try {
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO playlist VALUES (?, ?, ?);");
-        	ps.setString(1, p.getId());
-        	ps.setString(2, "0");
-        	ps.setString(3, "0");
-        	
-        	int playlistsResp = ps.executeUpdate();
-        	if(playlistsResp == 0) return false;
-        	return true;
-        } catch (Exception e) {
-            throw new Exception("Failed adding playlist: " + e.getMessage());
-        }
-    }
-    
-    public boolean deletePlaylist(String p) throws Exception {
-    	// Sets up the querys which we will be using to parse the databases
-        try {
-        	Statement statement = conn.createStatement();
-        	PreparedStatement ps = conn.prepareStatement("DELETE FROM playlistnames WHERE id = ? LIMIT 1;");
-        	ps.setString(1, p);
-        	
-        	int playlistsResp = ps.executeUpdate();
-        	return true;
-        } catch (Exception e) {
-            throw new Exception("Failed adding playlist: " + e.getMessage());
-        }
-    }
-    
-    public List<Site> getRegisteredSites() throws Exception {
-    	List<Site> output = new ArrayList<Site>();
-        try {
-        	// Sets up the querys which we will be using to parse the databases
-            Statement statement = conn.createStatement();
-            String query = "SELECT * FROM `registered-sites`";
-            ResultSet registeredSiteResp = statement.executeQuery(query);
-            //pls
-            
-            // Sets up the character, quote, ID for the videos in library
-            while(registeredSiteResp.next())  {
-            	String url = registeredSiteResp.getString("url");
-            	Site nice = new Site(url);
-            	output.add(nice);
-            }
-            return output;
-        } catch (Exception e) {
-            throw new Exception("Failed in getting books: " + e.getMessage());
-        }
-   }
+	public boolean addPlaylist(Playlist p) throws Exception {
+		// Sets up the querys which we will be using to parse the databases
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO playlist VALUES (?, ?, ?);");
+			ps.setString(1, p.getId());
+			ps.setString(2, "0");
+			ps.setInt(3, 0);
+
+			int playlistsResp = ps.executeUpdate();
+			if(playlistsResp == 0) return false;
+			return true;
+		} catch (Exception e) {
+			throw new Exception("Failed adding playlist: " + e.getMessage());
+		}
+	}
+
+	public boolean deletePlaylist(String p) throws Exception {
+		// Sets up the querys which we will be using to parse the databases
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM playlist WHERE id=?;");
+			ps.setString(1, p);
+
+			if(ps.executeUpdate() == 0) return false;
+			return true;
+		} catch (Exception e) {
+			throw new Exception("Failed adding playlist: " + e.getMessage());
+		}
+	}
+
+	public List<Site> getRegisteredSites() throws Exception {
+		List<Site> output = new ArrayList<Site>();
+		try {
+			// Sets up the querys which we will be using to parse the databases
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM `registered-sites`";
+			ResultSet registeredSiteResp = statement.executeQuery(query);
+			//pls
+
+			// Sets up the character, quote, ID for the videos in library
+			while(registeredSiteResp.next())  {
+				String url = registeredSiteResp.getString("url");
+				Site nice = new Site(url);
+				output.add(nice);
+			}
+			return output;
+		} catch (Exception e) {
+			throw new Exception("Failed in getting books: " + e.getMessage());
+		}
+	}
+
+	public boolean uploadVideo(Video v) throws Exception {
+		// Sets up the querys which we will be using to parse the databases
+		try {
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO videos VALUES (?, ?, ?, ?);");
+			ps.setString(1, v.getID());
+			ps.setString(2, v.getQuote());
+			ps.setString(3, v.getCharacter());
+			ps.setString(4, "n");
+
+			int playlistsResp = ps.executeUpdate();
+			if(playlistsResp == 0) return false;
+
+			PreparedStatement ps2 = conn.prepareStatement("INSERT INTO library VALUES (?, ?, ?, ?);");
+			ps2.setString(1, v.getID());
+			ps2.setString(2, v.getID());
+			ps2.setString(3, v.getFileName());
+			ps2.setInt(4, 1);
+
+			int playlistsResp2 = ps2.executeUpdate();
+
+			if(playlistsResp2 == 0) return false;
+
+			return true;
+		} catch (Exception e) {
+			throw new Exception("Failed adding playlist: " + e.getMessage());
+		}
+	}
+
+	public boolean deleteVideo(String videoID) throws Exception {
+		PreparedStatement ps2 = conn.prepareStatement("DELETE FROM library WHERE ID=? AND uploaded='1';");
+		ps2.setString(1, videoID);
+
+		int playlistsResp2 = ps2.executeUpdate();
+
+		if(playlistsResp2 == 0) return false;
+		
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM videos WHERE id=?;");
+		ps.setString(1, videoID);
+
+		int playlistsResp = ps.executeUpdate();
+		if(playlistsResp == 0) return false;
+
+		return true;
+	}
 
 	private PlaylistEntry generatePlaylistEntry(ResultSet resultSet) throws Exception {
 		String video = resultSet.getString("video");
@@ -285,6 +366,27 @@ public class VideosDAO {
 		String quote = resultSet.getString("Quote");
 		String ID = resultSet.getString("ID");
 		return new Video(ID, character, quote, "");
+	}
+	
+	private PublicSegment generatePublicSegment(ResultSet resultSet) throws Exception {
+		String character  = resultSet.getString("Character");
+		String text = resultSet.getString("Quote");
+		String ID = resultSet.getString("ID");
+		return new PublicSegment(ID, character, text, "");
+	}
+
+	public int largestVideoID() throws SQLException {
+		Statement statement = conn.createStatement();
+		String query = "SELECT * FROM videos";
+		ResultSet registeredSiteResp = statement.executeQuery(query);
+
+		int toOutput = 0;
+		while(registeredSiteResp.next())  {
+			String ID = registeredSiteResp.getString("ID");
+			if(Integer.parseInt(ID) > toOutput) toOutput = Integer.parseInt(ID);
+		}
+
+		return toOutput;
 	}
 
 }

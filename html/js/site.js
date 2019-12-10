@@ -1,17 +1,20 @@
 // Handles all front-end operations
 
 function loadVideos(fromPlaylist) {
-    if(!fromPlaylist){
+    if (!fromPlaylist) {
         document.getElementById("videos").innerHTML = '';
-        for (var i = 0; i < videos.length; i++) addNewVideo(i);
-    } else {
-        showPlaylistVideos();
+        for (var i in videos) addNewVideo(i);
     }
 }
 
 function loadPlaylists() {
-    for (var i = 0; i < playlists.length; i++) {
-        addNewPlaylist(i);
+    document.getElementById("playlists").innerHTML = '';
+    for (var i in playlists) addNewPlaylist(i);
+}
+
+function loadRemoteSites() {
+    for (var site in sites) {
+        addNewSite(site);
     }
 }
 
@@ -22,9 +25,6 @@ function addNewVideo(i) {
     var videoQuote = videos[i].quote;
     var videoCharacter = videos[i].character;
     var newDiv = document.createElement("DIV");
-    // if (i % 2 == 0) newDiv.className = "rowEven";
-    // else newDiv.className = "rowOdd";
-
     newDiv.className = "interiorRow";
 
     newDiv.id = i;
@@ -53,6 +53,18 @@ function addNewVideo(i) {
     };
     deleteButton.appendChild(trashCanImage);
 
+    if(isAdmin) {
+        var markButton = document.createElement("BUTTON");
+        markButton.setAttribute("type", "button");
+        markButton.setAttribute("style", "float: right");
+        var markImage = document.createElement("IMG");
+        markImage.setAttribute("src", "images/mark.png");
+        markButton.onclick = function (event) {
+            handleMarkVideo();
+        };
+        markButton.appendChild(markImage);
+    }
+
     var addToPlaylistButton = document.createElement("BUTTON");
     addToPlaylistButton.setAttribute("type", "button");
     addToPlaylistButton.setAttribute("style", "float: right");
@@ -75,6 +87,7 @@ function addNewVideo(i) {
     newDiv.appendChild(video);
     newDiv.appendChild(deleteButton);
     newDiv.appendChild(addToPlaylistButton);
+    if(isAdmin) newDiv.appendChild(markButton);
     videosElement.appendChild(newDiv);
 }
 
@@ -84,10 +97,10 @@ function addNewPlaylist(i) {
     // if (i % 2 == 0) newDiv.className = "rowEven";
     // else newDiv.className = "rowOdd";
 
-    newDiv.className = "interiorRow";
+    newDiv.className = selectedPlaylist === i ? "rowSelected" : "interiorRow";
 
     let x = i;
-    newDiv.id = i;
+    newDiv.id = playlists[i].id;
     newDiv.onclick = function () {
         selectPlaylist(x);
     };
@@ -114,7 +127,7 @@ function addNewPlaylist(i) {
     viewButton.setAttribute("style", "float: right");
     var viewImage = document.createElement("IMG");
     viewImage.setAttribute("src", "images/view.png");
-    viewButton.onclick = function(event) {
+    viewButton.onclick = function (event) {
         event.preventDefault();
         event.stopPropagation();
         handleViewPlaylist(x);
@@ -127,17 +140,45 @@ function addNewPlaylist(i) {
     playlistsElement.appendChild(newDiv);
 }
 
-function showPlaylistVideos() {
-    var videosElement = document.getElementById("videos").childNodes;
-    hideAllVideos();
-    videosElement.forEach(function(vid) {
-        if(playlistVideos.includes(videos[vid.id])) show(vid);
-    });
+function addNewSite(i) {
+    var sitesElement = document.getElementById("sites");
+    var newDiv = document.createElement("DIV");
+    // if (i % 2 == 0) newDiv.className = "rowEven";
+    // else newDiv.className = "rowOdd";
+
+    newDiv.className = "interiorRow";
+
+    let x = i;
+    newDiv.id = i;
+    newDiv.onclick = function () {
+        selectSite(x);
+    };
+
+    var textSpan = document.createElement("SPAN");
+    textSpan.className = "columnName";
+    textSpan.style = "width:50%";
+    textSpan.innerText = sites[i].url;
+
+    var deleteButton = document.createElement("BUTTON");
+    deleteButton.setAttribute("type", "button");
+    deleteButton.setAttribute("style", "float: right");
+    var trashCanImage = document.createElement("IMG");
+    trashCanImage.setAttribute("src", "images/trash_can.png");
+    deleteButton.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        handleDeleteSite(x);
+    };
+    deleteButton.appendChild(trashCanImage);
+
+    newDiv.appendChild(textSpan);
+    newDiv.appendChild(deleteButton);
+    sitesElement.appendChild(newDiv);
 }
 
 function hideAllVideos() {
     var videosElement = document.getElementById("videos").childNodes;
-    videosElement.forEach(function(vid) {
+    videosElement.forEach(function (vid) {
         hide(vid);
     });
 }
@@ -150,57 +191,10 @@ function show(element) {
     element.style.display = "";
 }
 
-/*function addSites() {
-    var html = '';
-    html += '<div class="columnPad" style="background-color:#fff"></div>'
-    html += '<div name="siteColumn" class="column">'
-    html += '    <h2>Sites</h2>'
-    html += '    <div class="rowEven">'
-    html += '        <input name="searchField" value="" style="width:65%" />'
-    html += '        <input type="button" value="Search" style="width:30%" onClick="JavaScript:handleSearchClick(this)">'
-    html += '    </div>'
-    html += '    <br>'
-    html += '    <div class="rowOdd">'
-    html += '        <input type="button" value="Upload Video" style="width:100%" onClick="JavaScript:handleNewVideo()">'
-    html += '    </div>'
-    html += '    <br>'
-    var listHTML = '';
-    var isEven = 1;
-
-    for (var i = 0; i < num; i++) {
-        var videoURL = url + videos[i].fileName;
-        console.log(videoURL)
-        if ((isPlaylist ? selectedPlaylist : selectedVideo) == i) listHTML += '<div class="rowSelected"';
-        else if (isEven) listHTML += '<div class="rowEven"';
-        else listHTML += '<div class="rowOdd"';
-        isEven = !isEven;
-        listHTML += 'onClick="JavaScript:select' + (isPlaylist ? 'Playlist' : 'Video') + '(' + i + ')"';
-        listHTML += '>\n <span class="columnName" style="width:50%">(';
-        listHTML += isPlaylist ? "Playlist" : "Video";
-        listHTML += ' ' + (i + 1);
-        listHTML += ' name)</span>\n';
-        if (!isPlaylist) {
-            listHTML += '<video width=300 height=200 controls>';
-            listHTML += '<source src=' + videoURL + ' type="video/ogg">';
-            listHTML += '</video>'
-        }
-        if (isAdmin) listHTML += ' <input type="button" value="M" style="width:20%" onClick="JavaScript:handleClick(this)">\n';
-        listHTML += ' <img src="images/trash_can.png" onClick="JavaScript:handleDelete'
-        listHTML += isPlaylist ? "Playlist" : "Video";
-        listHTML += '(';
-        listHTML += i;
-        listHTML += ')">\n';
-        listHTML += '</div>\n';
-    }
-    html += listHTML;
-    html += '    <br>'
-    html += '</div>'
-    document.getElementById("sites").innerHTML = html;
- }*/
-
 function updateAdminAccess(access) {
     isAdmin = access;
     updateAdminSettings();
+    loadVideos();
 }
 
 function updateAdminSettings() {
@@ -217,55 +211,64 @@ function updateAdminSettings() {
 }
 
 function selectPlaylist(p) {
-    if (p == selectedPlaylist) return;
     var playlistElement = document.getElementById("playlists");
-    if (selectedPlaylist >= 0 && selectedPlaylist != p) playlistElement.childNodes[selectedPlaylist].className = "interiorRow";
-    playlistElement.childNodes[p].className = "rowSelected";
+    if (selectedPlaylist !== undefined && selectedPlaylist != p) {
+        playlistElement.childNodes.forEach(function (playlist) {
+            if (playlist.id == selectedPlaylist) playlist.className = "interiorRow";
+        });
+    }
+    playlistElement.childNodes.forEach(function (playlist) {
+        if (playlist.id == p) playlist.className = "rowSelected";
+    });
+    selectedPlaylist = p;
+}
+
+function selectSite(p) {
+    var playlistElement = document.getElementById("sites");
+    if (selectedPlaylist !== undefined && selectedPlaylist != p) {
+        playlistElement.childNodes.forEach(function (playlist) {
+            if (playlist.id == selectedPlaylist) playlist.className = "interiorRow";
+        });
+    }
+    playlistElement.childNodes.forEach(function (playlist) {
+        if (playlist.id == p) playlist.className = "rowSelected";
+    });
     selectedPlaylist = p;
 }
 
 function selectVideo(v) {
-    if (v == selectedVideo) return;
     var videoElement = document.getElementById("videos");
-    if (selectedVideo >= 0 && selectedVideo != v) videoElement.childNodes[selectedVideo].className = "interiorRow";
-    videoElement.childNodes[v].className = "rowSelected";
+    videoElement.childNodes.forEach(function (child) {
+        if (child.id == v) child.className = "rowSelected";
+        else child.className = "interiorRow";
+    });
     selectedVideo = v;
 }
 
 function handleDeleteVideo(v) {
-    var videoElement = document.getElementById("videos");
-    hide(videoElement.childNodes[v]);
-    if(viewingPlaylist) {
-        playlists[selectedPlaylist].entries.forEach(function(vid) {
-            if(vid.id === v) {
-                hide(vid);
-            }
-        });
-        playlists[selectedPlaylist].entries = playlists[selectedPlaylist].entries.filter(function(value) {
-            return !(value === videos[v]);
-        });
+    if (viewingPlaylist) {
+        removeVideoFromPlaylist(v, selectedPlaylist);
     } else {
-        // videoElement.removeChild(videoElement.childNodes[v]);
+        deleteVideo(v);
     }
 }
 
 function handleDeletePlaylist(p) {
-    var videoElement = document.getElementById("playlists");
-    hide(videoElement.childNodes[p]);
-    // videoElement.removeChild(videoElement.childNodes[p]);
-    if(selectedPlaylist == p) selectedPlaylist = -1;
-    var xml = createCORSRequest("POST", delete_playlist_url);
-    var json = {
-        playlistID: playlists[p].id
-    };
-    xml.send(json);
-    playlists.splice(p, 1);
-    playlistNum--;
+    // hide(videoElement.childNodes[p]);
+    deletePlaylistPost(p);
+}
+
+function handleDeleteSite(s) {
+    var sitesElement = document.getElementById("sites");
+    // hide(videoElement.childNodes[p]);
+    sitesElement.childNodes.forEach(function (siteNode) {
+        if (siteNode.id == sites[s].url) sitesElement.removeChild(siteNode);
+    });
+    unregisterSitePost(sites[s].url);
 }
 
 function handleNewVideo() {
-    // videoNum++;
-    // makeList(0, videoNum);
+    // TODO
     var form = document.createForm;
     var data = {};
     data["name"] = form.constantName.value;
@@ -281,59 +284,111 @@ function handleNewPlaylist() {
     var newPlaylistName = document.getElementById("newPlaylistNameField");
     var newName = newPlaylistName.value;
     // THROW ERROR IF MULTIPLE OF THE SAME NAME
-    if(newName === "")
-        playlists.push({ id: "New Playlist " + playlists.length, entries: [] });
-    else
-        playlists.push({ id: newName, entries: [] });
-    addNewPlaylist(playlists.length - 1);
-    var xml = createCORSRequest("POST", create_playlist_url);
-    var json = {
-        playlistID: newName
-    };
-    xml.send(json);
-    playlistNum++;
+    if (newName === "") {
+        newName = "New Playlist " + playlists.length;
+    }
+    if (playlists[newName] !== undefined) {
+        alert("Must choose a unique name for a playlist!");
+        return;
+    }
+    createPlaylistPost(newName);
 }
 
 function handleViewPlaylist(i) {
-    playlistVideos = playlists[i].entries;
-    loadVideos(true);
+    videosToView = {};
+    playlists[i].entries.forEach(function (video) {
+        if (video.videoID > 0) {
+            videosToView[video.index] = video.videoID;
+        }
+    });
+    var videosElement = document.getElementById("videos").childNodes;
+    hideAllVideos();
+    document.getElementById("videos").innerHTML = '';
+    for (var vid in videosToView) {
+        addNewVideo(videosToView[vid]);
+    }
     viewingPlaylist = true;
 }
 
 function handleMyLibraryClick() {
-    var videosElement = document.getElementById("videos").childNodes;
-    videosElement.forEach(function(vid) {
-        show(vid);
-    });
+    document.getElementById("videos").innerHTML = '';
     viewingPlaylist = false;
+    loadVideos(viewingPlaylist);
 }
 
 function handleSearchVideosClick() {
     var searchText = document.getElementById("searchVideosField").value;
-    var re = new RegExp('"(.*?)"');
-    var searchElements = searchText.split(re);
-    console.log(searchElements);
-    processResponse();
+    searchText = searchText.replace(/"/g,"");
+    var searching = {};
+    var toShow = [];
+
+    Object.keys(videos).forEach(function(v) {
+        searching[v] = videos[v].character + ", " + videos[v].quote;
+    });
+
+    var videosElement = document.getElementById("videos");
+
+    for(var i in searching) {
+        if(searching[i].includes(searchText)) {
+            videosElement.childNodes.forEach(function(child) {
+                if(child.id == i) show(child);
+            });
+        }
+        else {
+            videosElement.childNodes.forEach(function(child) {
+                if(child.id == i) hide(child);
+            });
+        }
+    }
 }
 
 function handleSearchSitesClick() {
     var searchText = document.getElementById("searchSitesField").value;
     window.alert(searchText);
-    processResponse();
+}
+
+function handleRegisterSiteClick() {
+    var siteElement = document.getElementById("sites");
+    var newSiteName = document.getElementById("registerSiteField").value;
+    if (newSiteName === "")
+        alert("Error: No site inputted.");
+    else
+        sites[newSiteName] = { "url": newSiteName };
+    registerSitePost(newSiteName);
 }
 
 function addVideoToPlaylist(v) {
-    if(selectedPlaylist < 0) {
+    if (selectedPlaylist === null) {
         window.alert("Must select a playlist!");
         return;
     }
-    if(playlists[selectedPlaylist].entries.includes(videos[v])) return;
-    playlists[selectedPlaylist].entries.push(videos[v]);
+    appendVideoToPlaylist(selectedPlaylist, v);
 }
+
+// prepares the base64-encoded string and enabled button
+function getBase64(file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+        document.getElementById("uploadVideoForm").childNodes[13].value = reader.result;
+    };
+}
+
+// When file is selected, stash base64 value in the encoding field.
+function handleFileSelect(evt) {
+    var files = evt.target.files;
+    getBase64(files[0]); // request the load (async)
+}
+
 
 function main() {
     fetchVideos();
     fetchPlaylists();
+    fetchRemoteSites();
+
+    // register
+    document.getElementById("uploadVideoForm").childNodes[15].addEventListener('change', handleFileSelect, false);
 
     columns = [
         document.getElementsByName('playlistColumn')[0],
@@ -342,8 +397,9 @@ function main() {
     ]
 
     updateAdminAccess(false);
-    setTimeout(function() {
+    setTimeout(function () {
         show(document.getElementById("adminButton"));
-        if(window.scrollY == 0) window.scroll(0, 41);
+        if (window.scrollY == 0) window.scroll(0, 41);
     }, 3000)
+
 }

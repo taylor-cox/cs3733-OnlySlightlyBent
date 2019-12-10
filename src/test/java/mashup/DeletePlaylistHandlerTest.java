@@ -12,6 +12,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import mashup.db.VideosDAO;
 import mashup.http.CreatePlaylistRequest;
 import mashup.http.DeletePlaylistRequest;
+import mashup.http.DeletePlaylistResponse;
 import mashup.model.Playlist;
 
 /**
@@ -24,7 +25,7 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
     @BeforeClass
     public static void DeleteInput() throws IOException {
         // TODO: set up your sample input object here.
-        input = new DeletePlaylistRequest("123456789");
+        input = new DeletePlaylistRequest("Fav Star Trek Vids");
     }
 
     private Context DeleteContext() {
@@ -40,7 +41,7 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
     public void testDeletePlaylistHandler() {
         DeletePlaylistHandler handler = new DeletePlaylistHandler();
         Context ctx = DeleteContext();
-
+        boolean doesContainPlaylist = false;
 
         Playlist p = new Playlist("Fav Star Trek Vids");
         List<Playlist> playlists = null;
@@ -49,14 +50,18 @@ public class DeletePlaylistHandlerTest extends LambdaTest {
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {
 				System.out.print(playlists.get(i).toString() + "\n");
+		        if (playlists.get(i).getId().matches(p.getId())) doesContainPlaylist = true;
 			}
+	        Assert.assertEquals(doesContainPlaylist, true);
 			
-	        String output = handler.handleRequest(input, ctx);
+	        doesContainPlaylist = false;
+	        DeletePlaylistResponse output = handler.handleRequest(input, ctx);
 			playlists = VideosDAO.videosDAO().getPlaylists();
 			for (int i = 0; i < playlists.size(); i++) {
 				System.out.print(playlists.get(i).toString() + "\n");
+		        if (playlists.get(i).getId() == p.getId()) doesContainPlaylist = true;
 			}
-	        Assert.assertEquals(playlists.get(playlists.size()-1).toString(), p.toString());
+	        Assert.assertEquals(doesContainPlaylist, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
