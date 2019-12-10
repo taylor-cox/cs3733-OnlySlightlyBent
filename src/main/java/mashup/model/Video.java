@@ -10,14 +10,14 @@ public class Video {
 	public String character;
 	public String quote;
 	public String fileName;
-	public Boolean marked;
+	public Boolean isMarked;
 
-	public Video(String ID, String character, String quote, String fileName, Boolean marked) {
+	public Video(String ID, String character, String quote, String fileName, Boolean isMarked) {
 		this.ID = ID;
 		this.character = character;
 		this.quote = quote;
 		this.fileName = fileName;
-		this.marked = marked;
+		this.isMarked = isMarked;
 	}
 	
 	public String getID() { return ID; }
@@ -28,11 +28,11 @@ public class Video {
 	public void setQuote(String quote) { this.quote = quote; }
 	public String getFileName() { return fileName; }
 	public void setFileName(String fileName) { this.fileName = fileName; }
-	public Boolean getMarked() { return marked; }
-	public void setMarked(Boolean marked) { this.marked = marked; }
+	public Boolean getIsMarked() { return isMarked; }
+	public void setIsMarked(Boolean marked) { this.isMarked = isMarked; }
 
 	@Override
 	public String toString() {
-		return "Video [ID=" + ID + ", character=" + character + ", quote=" + quote + ", fileName=" + fileName + "marked=" + marked + "]";
+		return "Video [ID=" + ID + ", character=" + character + ", quote=" + quote + ", fileName=" + fileName + "isMarked=" + isMarked + "]";
 	}
 }
