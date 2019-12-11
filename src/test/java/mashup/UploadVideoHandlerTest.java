@@ -38,8 +38,6 @@ public class UploadVideoHandlerTest extends LambdaTest {
         request.setQuote("");
         request.setVideoID("");
         
-        assertEquals(resp.httpCode, 200);
-        
         DeleteVideoHandler handler2 = new DeleteVideoHandler();
         DeleteVideoRequest request2 = new DeleteVideoRequest("19", "");
         DeleteVideoResponse resp2 = handler2.handleRequest(request2, createContext("delteVideoTest"));
