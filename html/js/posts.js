@@ -197,3 +197,27 @@ function deleteVideo(v) {
         }
     };
 }
+
+function markVideo(v) {
+	var xhr = createCORSRequest("POST", mark_video_url);
+    var request = {};
+    request['isMarked'] = videoes[v].isMarked;
+    xhr.send(JSON.stringify(request));
+
+    xhr.onloadend = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                alert("Mark video successful.");
+                var videoElement = document.getElementByIsMarked("isMarked");
+                videoElement.childNodes.forEach(function (vidElement) {
+                    if (vidElement.id == v) videoElement.removeChild(vidElement);
+                });
+                delete videos[v];
+            } else {
+                alert("Mark video unsuccessful.");
+            }
+        } else {
+            console.log("ERROR");
+        }
+    };
+}
