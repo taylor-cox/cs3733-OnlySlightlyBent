@@ -19,6 +19,8 @@ function fetchVideos() {
     // viewable list of videos
     var xhr = createCORSRequest("GET", list_video_url);
     xhr.send();
+
+    // Handles remote sites
     console.log("Attempting to process videos...");
     xhr.onloadend = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -30,8 +32,39 @@ function fetchVideos() {
         } else {
             processListVideoResponse("N/A");
         }
-        loadVideos(false);
+        fetchRemoteVideos();
+        loadVideos();
     };
+    loadVideos();
+}
+
+function fetchRemoteVideos() {
+    sites.forEach(function(siteURL) {
+        var q = siteURL.indexOf("?apikey=");
+        if(q == -1) {
+            return;
+        } else {
+            var url = siteURL.substring(0, q);
+            var key = siteURL.substring(q+8);
+        }
+        var siteXHR = createCORSRequest("GET", url);
+        siteXHR.setRequestHeader("x-api-key", key);
+        siteXHR.send();
+        siteXHR.onloadend = function () {
+            if (siteXHR.readyState == XMLHttpRequest.DONE) {
+                if (siteXHR.status == 200) {
+                    processListVideoRemoteResponse(siteXHR.responseText);
+                } else if (siteXHR.status == 400) {
+                    alert("unable to process request");
+                }
+            } else {
+                processListVideoRemoteResponse("N/A");
+            }
+            loadVideos();
+        }
+    });
+
+    loadVideos();
 }
 
 function fetchPlaylists() {
@@ -74,6 +107,7 @@ function fetchRemoteSites() {
             processListRemoteSitesResponse("N/A");
         }
         loadRemoteSites();
+        fetchVideos();
     };
 }
 
@@ -83,6 +117,18 @@ function processListVideoResponse(result) {
     var js = JSON.parse(result);
     for (video in js.list) {
         videos[js.list[video].ID] = js.list[video];
+        videoNum++;
+    }
+    return js;
+}
+
+function processListVideoRemoteResponse(result) {
+    // Takes a json of all the videos and puts it into videos array, and
+    // returns the json.
+    var js = JSON.parse(result);
+    console.log(js);
+    for (video in js.segments) {
+        videos[js.segments[video].character + js.segments[video].text] = js.segments[video];
         videoNum++;
     }
     return js;

@@ -19,10 +19,16 @@ function loadRemoteSites() {
 }
 
 function addNewVideo(i) {
-    var url = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
+    var ourURL = 'https://3733onlyslightlybent.s3.amazonaws.com/video-clips/';
+    var isRemote = videos[i].fileName === undefined;
     var videosElement = document.getElementById("videos");
-    var videoURL = url + videos[i].fileName;
+    var videoURL = ourURL + videos[i].fileName;;
     var videoQuote = videos[i].quote;
+    if(isRemote) {
+        videoURL = videos[i].url;
+        videoQuote = videos[i].text;
+    }
+
     var videoCharacter = videos[i].character;
     var newDiv = document.createElement("DIV");
     newDiv.className = "interiorRow";
@@ -53,7 +59,7 @@ function addNewVideo(i) {
     };
     deleteButton.appendChild(trashCanImage);
 
-    if(isAdmin) {
+    if(isAdmin && !isRemote) {
         var markButton = document.createElement("BUTTON");
         markButton.setAttribute("type", "button");
         markButton.setAttribute("style", "float: right");
@@ -87,7 +93,7 @@ function addNewVideo(i) {
     newDiv.appendChild(video);
     newDiv.appendChild(deleteButton);
     newDiv.appendChild(addToPlaylistButton);
-    if(isAdmin) newDiv.appendChild(markButton);
+    if(isAdmin && !isRemote) newDiv.appendChild(markButton);
     videosElement.appendChild(newDiv);
 }
 
@@ -147,15 +153,16 @@ function addNewSite(i) {
     // else newDiv.className = "rowOdd";
 
     newDiv.className = "interiorRow";
+    // newDiv.id = sites[i];
 
     let x = i;
-    newDiv.id = i;
+    newDiv.id = sites[i];
     newDiv.onclick = function () {
         selectSite(x);
     };
 
     var textSpan = document.createElement("SPAN");
-    textSpan.className = sites[i];
+    textSpan.className = "columnName";
     textSpan.style = "width:50%";
     textSpan.innerText = sites[i];
 
@@ -178,10 +185,9 @@ function addNewSite(i) {
 
 function removeSite(url) {
     var sitesElement = document.getElementById("sites");
-    // hide(videoElement.childNodes[p]);
     sitesElement.childNodes.forEach(function (siteNode) {
-        if (siteNode.id === sites.indexOf(url)) sitesElement.removeChild(siteNode);
-
+        if (siteNode.id === url) sitesElement.removeChild(siteNode);
+        console.log(siteNode.id + ", " + url);
     });
     var index = sites.indexOf(url);
     sites.splice(index, 1);
@@ -217,8 +223,13 @@ function updateAdminSettings() {
         pads[n].className = isAdmin ? "columnAdminPad" : "columnPad";
     }
     var siteColumn = document.getElementsByName("siteColumn")[0];
-    if (!isAdmin) hide(siteColumn);
-    else show(siteColumn);
+    if (!isAdmin) {
+        hide(siteColumn);
+        document.getElementsByTagName("H1")[0].innerText = "Video Mashup";
+    } else {
+        show(siteColumn);
+        document.getElementsByTagName("H1")[0].innerText = "Video Mashup Admin";
+    }
 }
 
 function selectPlaylist(p) {
@@ -303,7 +314,7 @@ function handleNewPlaylist() {
 function handleViewPlaylist(i) {
     videosToView = {};
     playlists[i].entries.forEach(function (video) {
-        if (video.videoID > 0) {
+        if (video.videoID != 0) {
             videosToView[video.index] = video.videoID;
         }
     });
@@ -311,6 +322,7 @@ function handleViewPlaylist(i) {
     hideAllVideos();
     document.getElementById("videos").innerHTML = '';
     for (var vid in videosToView) {
+        console.log(vid);
         addNewVideo(videosToView[vid]);
     }
     viewingPlaylist = true;
@@ -329,7 +341,8 @@ function handleSearchVideosClick() {
     var toShow = [];
 
     Object.keys(videos).forEach(function(v) {
-        searching[v] = videos[v].character + ", " + videos[v].quote;
+        if(videos[v].quote === undefined) searching[v] = videos[v].character + ", " + videos[v].text;
+        else searching[v] = videos[v].character + ", " + videos[v].quote;
     });
 
     var videosElement = document.getElementById("videos");
@@ -386,9 +399,7 @@ function handleFileSelect(evt) {
     getBase64(files[0]); // request the load (async)
 }
 
-
 function main() {
-    fetchVideos();
     fetchPlaylists();
     fetchRemoteSites();
 

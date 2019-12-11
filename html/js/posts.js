@@ -12,6 +12,7 @@ function registerSitePost(url) {
                 alert("Website successfully registered.");
                 sites.push(url);
                 addNewSite(sites.indexOf(url));
+                fetchVideos();
             } else if (xhr.status == 400) {
                 alert("unable to process request");
             }
@@ -92,8 +93,10 @@ function deletePlaylistPost(p) {
 function appendVideoToPlaylist(playlist, video) {
     var xhr = createCORSRequest("POST", append_video_url);
     var request = {};
+    var isRemote = videos[video].ID === undefined;
     request['playlistID'] = playlists[playlist].id;
-    request['videoID'] = videos[video].ID;
+    if(isRemote) request['videoID'] = videos[video].character + videos[video].text;
+    else request['videoID'] = videos[video].ID;
     xhr.send(JSON.stringify(request));
 
     xhr.onloadend = function () {

@@ -1,5 +1,7 @@
 package mashup;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -8,36 +10,44 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import mashup.http.AllVideosResponse;
+import mashup.http.DeleteVideoRequest;
+import mashup.http.DeleteVideoResponse;
+import mashup.http.UploadVideoRequest;
+import mashup.http.UploadVideoResponse;
+import mashup.model.Video;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class UploadVideoHandlerTest {
+public class UploadVideoHandlerTest extends LambdaTest {
 
-    private static Object input;
-
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
-
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
-
-    @Test
-    public void testUploadVideoHandler() {
-        UploadVideoHandler handler = new UploadVideoHandler();
-        Context ctx = createContext();
-
-//        String output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-//        Assert.assertEquals("Hello from Lambda!", output);
+	@Test
+    public void testUploadDeleteVideo() throws IOException {
+    	UploadVideoHandler handler = new UploadVideoHandler();
+    	UploadVideoRequest request = new UploadVideoRequest("-100", "uploadTestCharacter", "uploadTestQuote", "");
+        UploadVideoResponse resp = handler.handleRequest(request, createContext("uploadVideoTest"));
+        
+        request.getBase64EncodedValue();
+        request.getCharacter();
+        request.getQuote();
+        request.getVideoID();
+        
+        request.setBase64EncodedValue("");
+        request.setCharacter("");
+        request.setQuote("");
+        request.setVideoID("");
+        
+        assertEquals(resp.httpCode, 200);
+        
+        DeleteVideoHandler handler2 = new DeleteVideoHandler();
+        DeleteVideoRequest request2 = new DeleteVideoRequest("19", "");
+        DeleteVideoResponse resp2 = handler2.handleRequest(request2, createContext("delteVideoTest"));
+        
+        request2.getPlaylistID();
+        request2.getVideoID();
+        
+        request2.setPlaylistID("");
+        request2.setVideoID("");
     }
 }
