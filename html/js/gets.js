@@ -105,7 +105,7 @@ function processListRemoteSitesResponse(result) {
     // returns the json.
     var js = JSON.parse(result);
     for (site in js.list) {
-        sites[js.list[site].url] = js.list[site];
+        sites.push(js.list[site].url);
     }
     return js;
 }

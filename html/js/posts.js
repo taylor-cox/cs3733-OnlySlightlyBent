@@ -10,14 +10,14 @@ function registerSitePost(url) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 alert("Website successfully registered.");
+                sites.push(url);
+                addNewSite(sites.indexOf(url));
             } else if (xhr.status == 400) {
                 alert("unable to process request");
             }
         } else {
             alert("Warning: There was an error processing your website.");
         }
-
-        addNewSite(url);
     };
 }
 
@@ -31,7 +31,7 @@ function unregisterSitePost(url) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 alert("Website successfully unregistered.");
-                delete sites[s];
+                removeSite(url);
             } else if (xhr.status == 400) {
                 alert("unable to process request");
             }

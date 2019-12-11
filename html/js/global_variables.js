@@ -23,4 +23,4 @@ var searchVideos = [];
 var playlists = {};
 var columns = [];
 var viewingPlaylist = false;
-var sites = {};
+var sites = [];

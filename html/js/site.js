@@ -155,9 +155,9 @@ function addNewSite(i) {
     };
 
     var textSpan = document.createElement("SPAN");
-    textSpan.className = "columnName";
+    textSpan.className = sites[i];
     textSpan.style = "width:50%";
-    textSpan.innerText = sites[i].url;
+    textSpan.innerText = sites[i];
 
     var deleteButton = document.createElement("BUTTON");
     deleteButton.setAttribute("type", "button");
@@ -174,6 +174,17 @@ function addNewSite(i) {
     newDiv.appendChild(textSpan);
     newDiv.appendChild(deleteButton);
     sitesElement.appendChild(newDiv);
+}
+
+function removeSite(url) {
+    var sitesElement = document.getElementById("sites");
+    // hide(videoElement.childNodes[p]);
+    sitesElement.childNodes.forEach(function (siteNode) {
+        if (siteNode.id === sites.indexOf(url)) sitesElement.removeChild(siteNode);
+
+    });
+    var index = sites.indexOf(url);
+    sites.splice(index, 1);
 }
 
 function hideAllVideos() {
@@ -259,12 +270,7 @@ function handleDeletePlaylist(p) {
 }
 
 function handleDeleteSite(s) {
-    var sitesElement = document.getElementById("sites");
-    // hide(videoElement.childNodes[p]);
-    sitesElement.childNodes.forEach(function (siteNode) {
-        if (siteNode.id == sites[s].url) sitesElement.removeChild(siteNode);
-    });
-    unregisterSitePost(sites[s].url);
+    unregisterSitePost(sites[s]);
 }
 
 function handleNewVideo() {
@@ -353,8 +359,7 @@ function handleRegisterSiteClick() {
     if (newSiteName === "")
         alert("Error: No site inputted.");
     else
-        sites[newSiteName] = { "url": newSiteName };
-    registerSitePost(newSiteName);
+        registerSitePost(newSiteName);
 }
 
 function addVideoToPlaylist(v) {
