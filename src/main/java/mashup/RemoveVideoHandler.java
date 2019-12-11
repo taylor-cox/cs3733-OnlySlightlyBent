@@ -20,13 +20,11 @@ public class RemoveVideoHandler implements RequestHandler<RemoveVideoRequest, Re
     public RemoveVideoResponse handleRequest(RemoveVideoRequest input, Context context) {
         context.getLogger().log("Input: " + input);
         
-        RemoveVideoResponse response;
+        RemoveVideoResponse response = new RemoveVideoResponse(403, "Video not in playlist");
 
         try {
 			if(removeVideo(input.getVideoID(), input.getPlaylistID()))
 				response = new RemoveVideoResponse(200);
-			else
-				response = new RemoveVideoResponse(403, "Video not in playlist");
 		} catch (Exception e) {
 			response = new RemoveVideoResponse(403, "Video could not be removed");
 			e.printStackTrace();

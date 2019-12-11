@@ -17,13 +17,11 @@ public class UnmarkLocalVideoSegmentHandler implements RequestHandler<UnmarkLoca
 
     @Override
     public UnmarkLocalVideoSegResponse handleRequest(UnmarkLocalVideoSegRequest input, Context context) {
-    	UnmarkLocalVideoSegResponse response;
+    	UnmarkLocalVideoSegResponse response = new UnmarkLocalVideoSegResponse("Video could not be marked.", 403);
 
         try {
 			if(markVideo(input.getVideoID()))
 				response = new UnmarkLocalVideoSegResponse(200);
-			else
-				response = new UnmarkLocalVideoSegResponse("Video could not be marked.", 403);
 		} catch (Exception e) {
 			response = new UnmarkLocalVideoSegResponse("Video could not be marked.", 403);
 			e.printStackTrace();

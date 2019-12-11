@@ -17,13 +17,11 @@ public class MarkLocalVideoSegmentHandler implements RequestHandler<MarkLocalVid
 
     @Override
     public MarkLocalVideoSegResponse handleRequest(MarkLocalVideoSegRequest input, Context context) {
-    	MarkLocalVideoSegResponse response;
+    	MarkLocalVideoSegResponse response = new MarkLocalVideoSegResponse("Video could not be marked.", 403);
 
         try {
 			if(markVideo(input.getVideoID()))
 				response = new MarkLocalVideoSegResponse(200);
-			else
-				response = new MarkLocalVideoSegResponse("Video could not be marked.", 403);
 		} catch (Exception e) {
 			response = new MarkLocalVideoSegResponse("Video could not be marked.", 403);
 			e.printStackTrace();

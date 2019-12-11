@@ -16,13 +16,11 @@ public class RegisterRemoteSiteHandler implements RequestHandler<RegisterSiteReq
 	
     @Override
     public RegisterSiteResponse handleRequest(RegisterSiteRequest input, Context context) {
-    	RegisterSiteResponse response;
+    	RegisterSiteResponse response = new RegisterSiteResponse(401, "Site is already registered.");;
     	
     	try {
 			if(registerSite(input.getUrl()))
 				response = new RegisterSiteResponse(200);
-			else
-				response = new RegisterSiteResponse(401, "Site is already registered.");
 		} catch (Exception e) {
 			response = new RegisterSiteResponse(402, "Site could not be registered at this time.");
 			e.printStackTrace();

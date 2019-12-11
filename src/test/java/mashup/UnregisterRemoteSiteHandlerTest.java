@@ -8,36 +8,34 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import mashup.http.DeleteVideoRequest;
+import mashup.http.DeleteVideoResponse;
+import mashup.http.RegisterSiteRequest;
+import mashup.http.RegisterSiteResponse;
+import mashup.http.UnregisterSiteRequest;
+import mashup.http.UnregisterSiteResponse;
+import mashup.http.UploadVideoRequest;
+import mashup.http.UploadVideoResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class UnregisterRemoteSiteHandlerTest extends LambdaTest {
 
-    private static Object input;
-
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
-
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
-
-    @Test
-    public void testUnregisterRemoteSiteHandler() {
-        UnregisterRemoteSiteHandler handler = new UnregisterRemoteSiteHandler();
-        Context ctx = createContext();
-
-//        String output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-//        Assert.assertEquals("Hello from Lambda!", output);
+	@Test
+    public void testUnregisterRemoteSite() throws IOException {
+        RegisterRemoteSiteHandler handler2 = new RegisterRemoteSiteHandler();
+        RegisterSiteRequest request2 = new RegisterSiteRequest("this is a test URL");
+        RegisterSiteResponse resp2 = handler2.handleRequest(request2, createContext("registerSiteTest"));
+        
+        request2.getUrl();
+        request2.setUrl("");
+        
+    	UnregisterRemoteSiteHandler handler = new UnregisterRemoteSiteHandler();
+    	UnregisterSiteRequest request = new UnregisterSiteRequest("this is a test URL");
+        UnregisterSiteResponse resp = handler.handleRequest(request, createContext("unregisterSiteTest"));
+        
+        request.getUrl();
+        request.setUrl("");
     }
 }

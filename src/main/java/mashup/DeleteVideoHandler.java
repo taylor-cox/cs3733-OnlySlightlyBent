@@ -17,13 +17,11 @@ public class DeleteVideoHandler implements RequestHandler<DeleteVideoRequest, De
     @Override
     public DeleteVideoResponse handleRequest(DeleteVideoRequest input, Context context) {
         context.getLogger().log("Input: " + input);
-        DeleteVideoResponse response;
+        DeleteVideoResponse response = new DeleteVideoResponse(403, "Video could not be marked.");
         
         try {
 			if(deleteVideo(input.getVideoID()))
 				response = new DeleteVideoResponse(200);
-			else
-				response = new DeleteVideoResponse(403, "Video could not be marked.");
 		} catch (Exception e) {
 			response = new DeleteVideoResponse(403, "Video could not be marked.");
 			e.printStackTrace();

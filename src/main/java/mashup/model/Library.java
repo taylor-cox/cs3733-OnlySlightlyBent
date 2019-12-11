@@ -8,11 +8,6 @@ import java.util.List;
 public class Library {
 	HashMap<String, Video> videos = new HashMap<String, Video>();
 	
-	public Library(ArrayList<Video> videos) {
-		for(Video v : videos)
-			this.videos.put(v.ID, v);
-	}
-	
 	public Library() { }
 	
 	public List<Video> getVideos() {

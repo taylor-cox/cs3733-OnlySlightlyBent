@@ -16,13 +16,11 @@ public class UnregisterRemoteSiteHandler implements RequestHandler<UnregisterSit
 		
 	    @Override
 	    public UnregisterSiteResponse handleRequest(UnregisterSiteRequest input, Context context) {
-	    	UnregisterSiteResponse response;
+	    	UnregisterSiteResponse response = new UnregisterSiteResponse(401, "Site is already removed.");;
 	    	
 	    	try {
 				if(unregisterSite(input.getUrl()))
 					response = new UnregisterSiteResponse(200);
-				else
-					response = new UnregisterSiteResponse(401, "Site is already removed.");
 			} catch (Exception e) {
 				response = new UnregisterSiteResponse(402, "Site could not be removed at this time oh no.");
 				e.printStackTrace();
