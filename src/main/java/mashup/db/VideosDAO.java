@@ -168,7 +168,7 @@ public class VideosDAO {
 			// Sets up the querys which we will be using to parse the databases
 			Statement statement = conn.createStatement();
 			Statement statement2 = conn.createStatement();
-			String query = "SELECT * FROM videos;";
+			String query = "SELECT * FROM videos WHERE isMarked='n';";
 			ResultSet videos = statement.executeQuery(query);
 			query = "SELECT * FROM library;";
 			ResultSet library = statement2.executeQuery(query);
