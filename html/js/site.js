@@ -24,7 +24,7 @@ function addNewVideo(i) {
     var videosElement = document.getElementById("videos");
     var videoURL = ourURL + videos[i].fileName;;
     var videoQuote = videos[i].quote;
-    if(isRemote) {
+    if (isRemote) {
         videoURL = videos[i].url;
         videoQuote = videos[i].text;
     }
@@ -59,17 +59,17 @@ function addNewVideo(i) {
     };
     deleteButton.appendChild(trashCanImage);
 
-    if(isAdmin && !isRemote) {
-        var markButton = document.createElement("BUTTON");
-        markButton.setAttribute("type", "button");
-        markButton.setAttribute("style", "float: right");
-        var markImage = document.createElement("IMG");
-        markImage.setAttribute("src", "images/mark.png");
-        markButton.onclick = function (event) {
-            handleMarkVideo();
-        };
-        markButton.appendChild(markImage);
-    }
+    var markButton = document.createElement("BUTTON");
+    markButton.setAttribute("type", "button");
+    markButton.setAttribute("style", "float: right");
+    var markImage = document.createElement("IMG");
+    markImage.setAttribute("src", "images/mark.png");
+    markButton.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        handleMarkVideo(x);
+    };
+    markButton.appendChild(markImage);
 
     var addToPlaylistButton = document.createElement("BUTTON");
     addToPlaylistButton.setAttribute("type", "button");
@@ -336,26 +336,26 @@ function handleMyLibraryClick() {
 
 function handleSearchVideosClick() {
     var searchText = document.getElementById("searchVideosField").value;
-    searchText = searchText.replace(/"/g,"");
+    searchText = searchText.replace(/"/g, "");
     var searching = {};
     var toShow = [];
 
-    Object.keys(videos).forEach(function(v) {
-        if(videos[v].quote === undefined) searching[v] = videos[v].character + ", " + videos[v].text;
+    Object.keys(videos).forEach(function (v) {
+        if (videos[v].quote === undefined) searching[v] = videos[v].character + ", " + videos[v].text;
         else searching[v] = videos[v].character + ", " + videos[v].quote;
     });
 
     var videosElement = document.getElementById("videos");
 
-    for(var i in searching) {
-        if(searching[i].includes(searchText)) {
-            videosElement.childNodes.forEach(function(child) {
-                if(child.id == i) show(child);
+    for (var i in searching) {
+        if (searching[i].includes(searchText)) {
+            videosElement.childNodes.forEach(function (child) {
+                if (child.id == i) show(child);
             });
         }
         else {
-            videosElement.childNodes.forEach(function(child) {
-                if(child.id == i) hide(child);
+            videosElement.childNodes.forEach(function (child) {
+                if (child.id == i) hide(child);
             });
         }
     }
@@ -381,6 +381,10 @@ function addVideoToPlaylist(v) {
         return;
     }
     appendVideoToPlaylist(selectedPlaylist, v);
+}
+
+function handleMarkVideo(v) {
+    markVideo(v);
 }
 
 // prepares the base64-encoded string and enabled button

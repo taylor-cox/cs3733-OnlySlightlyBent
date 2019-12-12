@@ -207,7 +207,7 @@ function markVideo(v) {
     var isLocal = videos[v].ID !== undefined;
     if(!isLocal) return;
 
-    request['videoID'] = videoes[v].ID;
+    request['videoID'] = videos[v].ID;
     xhr.send(JSON.stringify(request));
 
     xhr.onloadend = function () {
@@ -216,28 +216,6 @@ function markVideo(v) {
                 alert("Mark video successful.");
             } else {
                 alert("Mark video unsuccessful.");
-            }
-        } else {
-            console.log("ERROR");
-        }
-    };
-}
-
-function unmarkVideo(v) {
-	var xhr = createCORSRequest("POST", unmark_video_url);
-    var request = {};
-    var isLocal = videos[v].ID !== undefined;
-    if(!isLocal) return;
-
-    request['videoID'] = videoes[v].ID;
-    xhr.send(JSON.stringify(request));
-
-    xhr.onloadend = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            if (xhr.status == 200) {
-                alert("Unmark video successful.");
-            } else {
-                alert("Unmark video unsuccessful.");
             }
         } else {
             console.log("ERROR");

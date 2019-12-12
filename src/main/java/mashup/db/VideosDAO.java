@@ -59,9 +59,9 @@ public class VideosDAO {
 			PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM `videos` WHERE id=?;");
 			ps2.setString(1, videoID);
 			ResultSet result2 = ps2.executeQuery();
+			result2.next();
 			String marked = result2.getString("isMarked");
 			String output;
-			result2.next();
 			if(marked.equals("y")) output = "n";
 			else output = "y";
 			
