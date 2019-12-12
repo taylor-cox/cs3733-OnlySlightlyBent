@@ -204,20 +204,40 @@ function deleteVideo(v) {
 function markVideo(v) {
 	var xhr = createCORSRequest("POST", mark_video_url);
     var request = {};
-    request['isMarked'] = videoes[v].isMarked;
+    var isLocal = videos[v].ID !== undefined;
+    if(!isLocal) return;
+
+    request['videoID'] = videoes[v].ID;
     xhr.send(JSON.stringify(request));
 
     xhr.onloadend = function () {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 200) {
                 alert("Mark video successful.");
-                var videoElement = document.getElementByIsMarked("isMarked");
-                videoElement.childNodes.forEach(function (vidElement) {
-                    if (vidElement.id == v) videoElement.removeChild(vidElement);
-                });
-                delete videos[v];
             } else {
                 alert("Mark video unsuccessful.");
+            }
+        } else {
+            console.log("ERROR");
+        }
+    };
+}
+
+function unmarkVideo(v) {
+	var xhr = createCORSRequest("POST", unmark_video_url);
+    var request = {};
+    var isLocal = videos[v].ID !== undefined;
+    if(!isLocal) return;
+
+    request['videoID'] = videoes[v].ID;
+    xhr.send(JSON.stringify(request));
+
+    xhr.onloadend = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                alert("Unmark video successful.");
+            } else {
+                alert("Unmark video unsuccessful.");
             }
         } else {
             console.log("ERROR");

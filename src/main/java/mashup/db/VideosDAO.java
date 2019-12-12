@@ -56,8 +56,19 @@ public class VideosDAO {
 
 	public boolean markVideo(String videoID) throws Exception {
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE videos SET isMarked='y' WHERE id = ?;");
-			ps.setString(1, videoID);
+			PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM `videos` WHERE id=?;");
+			ps2.setString(1, videoID);
+			ResultSet result2 = ps2.executeQuery();
+			String marked = result2.getString("isMarked");
+			String output;
+			result2.next();
+			if(marked.equals("y")) output = "n";
+			else output = "y";
+			
+			
+			PreparedStatement ps = conn.prepareStatement("UPDATE `videos` SET isMarked=? WHERE id=?;");
+			ps.setString(1, output);
+			ps.setString(2, videoID);
 			int result = ps.executeUpdate();
 			if(result == 0) return false;
 			return true;
@@ -75,7 +86,6 @@ public class VideosDAO {
 			ResultSet videos = ps.executeQuery();
 			int maxOrder = 0;
 			while(videos.next()) {
-				System.out.println(videos);
 				int order = Integer.parseInt(videos.getString("order"));
 				if(videos.getString("video").equals(videoID)) return false;
 				else if(order > maxOrder) maxOrder = order;

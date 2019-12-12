@@ -10,6 +10,8 @@ var append_video_url = base_url + "appendVideo";
 var remove_video_url = base_url + "removeVideo";
 var upload_video_url = base_url + "uploadVideo";
 var delete_video_url = base_url + "deleteVideo";
+var mark_video_url = base_url + "markLocalVideoSeg";
+var unmark_video_url = base_url + "unmarkLocalVideoSeg";
 
 
 // var get_url = "https://z4mjdesn38.execute-api.us-east-1.amazonaws.com/secure/";
